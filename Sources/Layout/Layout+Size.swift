@@ -41,6 +41,7 @@ public extension Layout {
 }
 
 public extension Layout {
+    @inlinable
     func size(
         _ relation: Relation,
         _ size: CGSize
@@ -51,12 +52,14 @@ public extension Layout {
         ])
     }
 
+    @inlinable
     func size(
         _ size: CGSize
     ) -> Layout {
         self.size(.equal, size)
     }
 
+    @inlinable
     func matchSize(
         _ relation: Relation = .equal,
         to secondItem: LayoutContainer,
@@ -84,12 +87,14 @@ public extension Layout {
 }
 
 public extension Layout {
+    @inlinable
     func aspectRatio(
         _ size: CGSize
     ) -> Layout {
         width(.equal, to: firstItem.heightAnchor, multiplier: size.width / size.height)
     }
 
+    @inlinable
     func aspectRatio(
         _ ratio: CGFloat
     ) -> Layout {
@@ -98,6 +103,7 @@ public extension Layout {
 }
 
 extension NSLayoutDimension {
+    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         constant: CGFloat
@@ -112,6 +118,7 @@ extension NSLayoutDimension {
         }
     }
 
+    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutDimension,

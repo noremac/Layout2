@@ -3,6 +3,7 @@ import UIKit
 // MARK: Edges
 
 public extension Layout {
+    @inlinable
     func top(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -19,6 +20,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func leading(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -35,6 +37,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func bottom(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -51,6 +54,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func trailing(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -67,6 +71,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func alignEdges(
         _ edges: NSDirectionalRectEdge = .all,
         to secondItem: LayoutContainer? = nil,
@@ -121,6 +126,7 @@ public extension Layout {
         return addConstraints(constraints)
     }
 
+    @inlinable
     func containEdges(
         _ edges: NSDirectionalRectEdge,
         within secondItem: LayoutContainer? = nil,
@@ -177,6 +183,7 @@ public extension Layout {
 }
 
 public extension Layout {
+    @inlinable
     func centerY(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -193,6 +200,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func centerX(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -209,6 +217,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func center(
         within secondItem: LayoutContainer? = nil
     ) -> Layout {
@@ -228,6 +237,7 @@ public extension Layout {
 }
 
 extension NSLayoutYAxisAnchor {
+    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutYAxisAnchor,
@@ -245,6 +255,7 @@ extension NSLayoutYAxisAnchor {
 }
 
 extension NSLayoutXAxisAnchor {
+    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutXAxisAnchor,
