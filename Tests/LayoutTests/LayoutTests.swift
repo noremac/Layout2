@@ -1,11 +1,4 @@
+import Layout
 import XCTest
-@testable import Layout
 
-final class LayoutTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(Layout().text, "Hello, World!")
-    }
-}
+final class LayoutTests: XCTestCase {}
