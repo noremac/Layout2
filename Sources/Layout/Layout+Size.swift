@@ -1,7 +1,8 @@
 import UIKit
 
 public extension Layout {
-    func width(
+    @inlinable
+    func matchWidth(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
         multiplier: CGFloat = 1,
@@ -18,10 +19,26 @@ public extension Layout {
                 )
         )
     }
+
+    @inlinable
+    func width(
+        _ relation: Relation,
+        to constant: CGFloat
+    ) -> Layout {
+        addConstraint(firstItem.widthAnchor.constraint(withRelation: relation, constant: constant))
+    }
+
+    @inlinable
+    func width(
+        _ constant: CGFloat
+    ) -> Layout {
+        width(.equal, to: constant)
+    }
 }
 
 public extension Layout {
-    func height(
+    @inlinable
+    func matchHeight(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
         multiplier: CGFloat = 1,
@@ -37,6 +54,21 @@ public extension Layout {
                     constant: constant
                 )
         )
+    }
+
+    @inlinable
+    func height(
+        _ relation: Relation,
+        to constant: CGFloat
+    ) -> Layout {
+        addConstraint(firstItem.heightAnchor.constraint(withRelation: relation, constant: constant))
+    }
+
+    @inlinable
+    func height(
+        _ constant: CGFloat
+    ) -> Layout {
+        height(.equal, to: constant)
     }
 }
 

@@ -70,6 +70,8 @@ func foo() {
 //        .width(multiplier: 2)
 //        .width(constant: 2)
 //        .size(CGSize(width: 100, height: 100))
+        .height(10)
+        .height(.equal, to: 10)
         .aspectRatio(CGSize(width: 100, height: 66))
         .activate()
 }
