@@ -123,14 +123,14 @@ public extension Layout {
     func aspectRatio(
         _ size: CGSize
     ) -> Layout {
-        width(.equal, to: firstItem.heightAnchor, multiplier: size.width / size.height)
+        aspectRatio(size.width / size.height)
     }
 
     @inlinable
     func aspectRatio(
         _ ratio: CGFloat
     ) -> Layout {
-        width(.equal, to: firstItem.heightAnchor, multiplier: ratio)
+        matchWidth(.equal, to: firstItem.heightAnchor, multiplier: ratio)
     }
 }
 
