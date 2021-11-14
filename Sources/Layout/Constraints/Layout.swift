@@ -1,4 +1,10 @@
+#if canImport(AppKit)
+import AppKit
+#elseif canImport(UIKit)
 import UIKit
+#else
+#error("Unsupported platform")
+#endif
 
 public final class Layout {
     public let firstItem: LayoutContainer
@@ -29,15 +35,15 @@ public extension Layout {
 
 public extension Layout {
     @inlinable
-    func addConstraint(_ constraint: NSLayoutConstraint) -> Layout {
-        addConstraints([constraint])
-    }
-
-    @inlinable
     func addConstraints(_ constraints: [NSLayoutConstraint]) -> Layout {
         _constraints.append(contentsOf: constraints)
         _lastAddedConstraints = constraints
         return self
+    }
+
+    @inlinable
+    func addConstraint(_ constraint: NSLayoutConstraint) -> Layout {
+        addConstraints([constraint])
     }
 
     @inlinable
@@ -47,6 +53,7 @@ public extension Layout {
         return _constraints
     }
 
+    #if canImport(UIKit)
     @inlinable
     func priority(_ priority: UILayoutPriority) -> Layout {
         _lastAddedConstraints.forEach { constraint in
@@ -54,6 +61,15 @@ public extension Layout {
         }
         return self
     }
+    #elseif canImport(AppKit)
+    @inlinable
+    func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
+        _lastAddedConstraints.forEach { constraint in
+            constraint.priority = priority
+        }
+        return self
+    }
+    #endif
 
     @inlinable
     func identifier(_ identifier: String?) -> Layout {

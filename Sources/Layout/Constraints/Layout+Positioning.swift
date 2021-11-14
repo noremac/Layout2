@@ -1,4 +1,10 @@
+#if canImport(AppKit)
+import AppKit
+#elseif canImport(UIKit)
 import UIKit
+#else
+#error("Unsupported platform")
+#endif
 
 // MARK: Edges
 
@@ -75,7 +81,7 @@ public extension Layout {
     func alignEdges(
         _ edges: NSDirectionalRectEdge = .all,
         to secondItem: LayoutContainer? = nil,
-        insets: NSDirectionalEdgeInsets = .zero
+        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
     ) -> Layout {
         var constraints = [NSLayoutConstraint]()
 
@@ -130,7 +136,7 @@ public extension Layout {
     func containEdges(
         _ edges: NSDirectionalRectEdge,
         within secondItem: LayoutContainer? = nil,
-        insets: NSDirectionalEdgeInsets = .zero
+        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
     ) -> Layout {
         var constraints = [NSLayoutConstraint]()
 

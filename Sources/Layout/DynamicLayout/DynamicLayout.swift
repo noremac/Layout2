@@ -1,4 +1,10 @@
+#if canImport(AppKit)
+import AppKit
+#elseif canImport(UIKit)
 import UIKit
+#else
+#error("Unsupported platform")
+#endif
 
 public final class DynamicLayout<State> {
     private let mainScope = Scope(.always)

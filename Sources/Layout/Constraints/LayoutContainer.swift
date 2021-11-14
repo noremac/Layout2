@@ -1,4 +1,10 @@
+#if canImport(AppKit)
+import AppKit
+#elseif canImport(UIKit)
 import UIKit
+#else
+#error("Unsupported platform")
+#endif
 
 public protocol LayoutContainer {
     var layout: Layout { get }
@@ -30,6 +36,7 @@ public protocol LayoutContainer {
     var lastBaselineAnchor: NSLayoutYAxisAnchor { get }
 }
 
+#if canImport(UIKit)
 extension UIView: LayoutContainer {
     public var layout: Layout {
         translatesAutoresizingMaskIntoConstraints = false
@@ -58,20 +65,33 @@ extension UILayoutGuide: LayoutContainer {
         bottomAnchor
     }
 }
+#elseif canImport(AppKit)
+extension NSView: LayoutContainer {
+    public var layout: Layout {
+        translatesAutoresizingMaskIntoConstraints = false
+        return Layout(self)
+    }
 
-func foo() {
-    UIView()
-        .layout
-        .alignEdges().priority(.defaultHigh)
-//        .width(10)
-//        .width(.greaterThanOrEqual, to: 10)
-//        .width()
-//        .width(.lessThanOrEqual, to: UIView().widthAnchor)
-//        .width(multiplier: 2)
-//        .width(constant: 2)
-//        .size(CGSize(width: 100, height: 100))
-        .height(10)
-        .height(.equal, to: 10)
-        .aspectRatio(CGSize(width: 100, height: 66))
-        .activate()
+    public var parentContainer: LayoutContainer {
+        superview!
+    }
 }
+
+extension NSLayoutGuide: LayoutContainer {
+    public var layout: Layout {
+        Layout(self)
+    }
+
+    public var parentContainer: LayoutContainer {
+        owningView!
+    }
+
+    public var firstBaselineAnchor: NSLayoutYAxisAnchor {
+        topAnchor
+    }
+
+    public var lastBaselineAnchor: NSLayoutYAxisAnchor {
+        bottomAnchor
+    }
+}
+#endif
