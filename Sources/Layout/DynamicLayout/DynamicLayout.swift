@@ -1,11 +1,43 @@
 import UIKit
 
 public final class DynamicLayout<State> {
-    private let scope = Scope(.always)
+    private let mainScope = Scope(.always)
 
-    public func configure(_ configure: (inout Configuration) -> Void) {
-        var cfg = Configuration(scope)
+    private var activeConstraints: Set<NSLayoutConstraint> = []
+
+    public init() {}
+
+    public func configure(file: StaticString = #file, line: UInt = #line, _ configure: (inout Configuration) -> Void) {
+        guard !mainScope.hasConstraintsOrActions else {
+            fatalError("\(#function) should only be called once.", file: file, line: line)
+        }
+        var cfg = Configuration(mainScope)
         configure(&cfg)
+    }
+
+    public func update(state: State) {
+        let contexts = mainScope.activeScopes(for: state)
+        let (newConstraints, actions) = contexts.reduce(into: ([NSLayoutConstraint](), [(State) -> Void]())) { result, context in
+            result.0 += context.constraints
+            result.1 += context.actions
+        }
+        let newSet = Set(newConstraints)
+        var constraintsToDeactivate = [NSLayoutConstraint]()
+        var constraintsToActivate = [NSLayoutConstraint]()
+        for newConstraint in newSet {
+            if !activeConstraints.contains(newConstraint) {
+                constraintsToActivate.append(newConstraint)
+            }
+        }
+        for oldConstraint in activeConstraints {
+            if !newSet.contains(oldConstraint) {
+                constraintsToDeactivate.append(oldConstraint)
+            }
+        }
+        NSLayoutConstraint.deactivate(constraintsToDeactivate)
+        NSLayoutConstraint.activate(constraintsToActivate)
+        activeConstraints = newSet
+        actions.forEach { $0(state) }
     }
 }
 
@@ -22,18 +54,27 @@ extension DynamicLayout {
         init(_ predicate: DynamicLayout.Predicate) {
             self.predicate = predicate
         }
+    }
+}
 
-        var hasConstraintsOrActions: Bool {
-            if otherwise != nil {
-                return true
-            }
-
-            if !constraints.isEmpty || !actions.isEmpty {
-                return true
-            }
-
-            return children.contains(where: \.hasConstraintsOrActions)
+extension DynamicLayout.Scope {
+    var hasConstraintsOrActions: Bool {
+        if otherwise != nil {
+            return true
         }
+
+        if !constraints.isEmpty || !actions.isEmpty {
+            return true
+        }
+
+        return children.contains(where: \.hasConstraintsOrActions)
+    }
+
+    func activeScopes(for state: State) -> [DynamicLayout.Scope] {
+        if predicate.closure(state) {
+            return children.reduce(into: [self], { $0 += $1.activeScopes(for: state) })
+        }
+        return otherwise?.activeScopes(for: state) ?? []
     }
 }
 
