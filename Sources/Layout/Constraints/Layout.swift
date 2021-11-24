@@ -6,6 +6,8 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
+// MARK: Layout
+
 public final class Layout {
     public let firstItem: LayoutContainer
 
@@ -25,6 +27,8 @@ public final class Layout {
     }
 }
 
+// MARK: Relation
+
 public extension Layout {
     enum Relation {
         case equal
@@ -32,6 +36,8 @@ public extension Layout {
         case greaterThanOrEqual
     }
 }
+
+// MARK: Building blocks
 
 public extension Layout {
     @inlinable

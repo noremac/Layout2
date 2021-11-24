@@ -6,6 +6,8 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
+// MARK: DynamicLayout
+
 public final class DynamicLayout<State> {
     private let mainScope = Scope(.always)
 
@@ -13,12 +15,11 @@ public final class DynamicLayout<State> {
 
     public init() {}
 
-    public func configure(file: StaticString = #file, line: UInt = #line, _ configure: (inout Configuration) -> Void) {
+    public func configure(file: StaticString = #file, line: UInt = #line, _ configure: (Configuration) -> Void) {
         guard !mainScope.hasConstraintsOrActions else {
             fatalError("\(#function) should only be called once.", file: file, line: line)
         }
-        var cfg = Configuration(mainScope)
-        configure(&cfg)
+        configure(Configuration(mainScope))
     }
 
     public func update(state: State) {
@@ -47,7 +48,31 @@ public final class DynamicLayout<State> {
     }
 }
 
-// MARK: Scope
+// MARK: - Predicate
+
+public extension DynamicLayout {
+    struct Predicate {
+        let closure: (State) -> Bool
+    }
+}
+
+public extension DynamicLayout.Predicate {
+    init(_ closure: @escaping (State) -> Bool) {
+        self.closure = closure
+    }
+
+    init(_ value: State) where State: Equatable {
+        self.init({ state in
+            state == value
+        })
+    }
+
+    internal static var always: Self {
+        self.init({ _ in true })
+    }
+}
+
+// MARK: - Scope
 
 extension DynamicLayout {
     final class Scope {
@@ -84,31 +109,7 @@ extension DynamicLayout.Scope {
     }
 }
 
-// MARK: Predicate
-
-public extension DynamicLayout {
-    struct Predicate {
-        let closure: (State) -> Bool
-    }
-}
-
-public extension DynamicLayout.Predicate {
-    init(_ closure: @escaping (State) -> Bool) {
-        self.closure = closure
-    }
-
-    init(_ value: State) where State: Equatable {
-        self.init({ state in
-            state == value
-        })
-    }
-
-    internal static var always: Self {
-        self.init({ _ in true })
-    }
-}
-
-// MARK: Configuration
+// MARK: - Configuration
 
 public extension DynamicLayout {
     final class Configuration {
@@ -119,6 +120,8 @@ public extension DynamicLayout {
         }
     }
 }
+
+// MARK: Conditionals
 
 public extension DynamicLayout.Configuration {
     func when(_ predicate: DynamicLayout.Predicate, _ whenBlock: () -> Void, otherwise otherwiseBlock: () -> Void) {
@@ -144,29 +147,20 @@ public extension DynamicLayout.Configuration {
         }
     }
 
-    func when(_ value: State, _ whenBlock: () -> Void, otherwise otherwiseBlock: () -> Void) where State: Equatable {
-        when(.init(value), whenBlock, otherwise: otherwiseBlock)
+    func when(_ predicate: DynamicLayout.Predicate, _ whenBlock: () -> Void) {
+        when(predicate, whenBlock, otherwise: {})
     }
 
-    func when(_ predicate: DynamicLayout.Predicate, _ whenBlock: () -> Void) {
-        let previousScope = currentScope
-        defer {
-            currentScope = previousScope
-        }
-
-        let newScope = DynamicLayout.Scope(predicate)
-        currentScope = newScope
-        whenBlock()
-
-        if newScope.hasConstraintsOrActions {
-            previousScope.children.append(newScope)
-        }
+    func when(_ value: State, _ whenBlock: () -> Void, otherwise otherwiseBlock: () -> Void) where State: Equatable {
+        when(.init(value), whenBlock, otherwise: otherwiseBlock)
     }
 
     func when(_ value: State, _ whenBlock: () -> Void) where State: Equatable {
         when(.init(value), whenBlock)
     }
 }
+
+// MARK: Actions
 
 public extension DynamicLayout.Configuration {
     func action(_ action: @escaping (State) -> Void) {
@@ -179,6 +173,8 @@ public extension DynamicLayout.Configuration {
         }
     }
 }
+
+// MARK: Constraints
 
 public extension DynamicLayout.Configuration {
     func constraints(@DynamicLayoutConstraintBuilder _ constraints: () -> [NSLayoutConstraint]) {
