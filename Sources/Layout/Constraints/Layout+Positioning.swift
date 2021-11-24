@@ -6,9 +6,12 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
-// MARK: Edges
+// MARK: - Edges
 
 public extension Layout {
+
+    // MARK: Top
+
     @inlinable
     func top(
         _ relation: Relation = .equal,
@@ -25,6 +28,8 @@ public extension Layout {
                 )
         )
     }
+
+    // MARK: Leading
 
     @inlinable
     func leading(
@@ -43,6 +48,8 @@ public extension Layout {
         )
     }
 
+    // MARK: Bottom
+
     @inlinable
     func bottom(
         _ relation: Relation = .equal,
@@ -60,6 +67,8 @@ public extension Layout {
         )
     }
 
+    // MARK: Trailing
+
     @inlinable
     func trailing(
         _ relation: Relation = .equal,
@@ -76,6 +85,8 @@ public extension Layout {
                 )
         )
     }
+
+    // MARK: Align
 
     @inlinable
     func alignEdges(
@@ -113,6 +124,8 @@ public extension Layout {
             }
         }
     }
+
+    // MARK: Contain
 
     @inlinable
     func containEdges(
@@ -156,23 +169,11 @@ public extension Layout {
     }
 }
 
+// MARK: - Centering
+
 public extension Layout {
-    @inlinable
-    func centerY(
-        _ relation: Relation = .equal,
-        to anchor: NSLayoutYAxisAnchor? = nil,
-        constant: CGFloat = 0
-    ) -> Layout {
-        addConstraint(
-            firstItem
-                .centerYAnchor
-                .constraint(
-                    withRelation: relation,
-                    to: anchor ?? firstItem.parentContainer.centerYAnchor,
-                    constant: constant
-                )
-        )
-    }
+
+    // MARK: X
 
     @inlinable
     func centerX(
@@ -190,6 +191,27 @@ public extension Layout {
                 )
         )
     }
+
+    // MARK: Y
+
+    @inlinable
+    func centerY(
+        _ relation: Relation = .equal,
+        to anchor: NSLayoutYAxisAnchor? = nil,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .centerYAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: anchor ?? firstItem.parentContainer.centerYAnchor,
+                    constant: constant
+                )
+        )
+    }
+
+    // MARK: X/Y
 
     @inlinable
     func center(
@@ -209,6 +231,8 @@ public extension Layout {
         ])
     }
 }
+
+// MARK: - Relation helpers
 
 extension NSLayoutYAxisAnchor {
     @inlinable

@@ -6,6 +6,8 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
+// MARK: Width
+
 public extension Layout {
     @inlinable
     func matchWidth(
@@ -42,6 +44,8 @@ public extension Layout {
     }
 }
 
+// MARK: Height
+
 public extension Layout {
     @inlinable
     func matchHeight(
@@ -77,6 +81,8 @@ public extension Layout {
         height(.equal, to: constant)
     }
 }
+
+// MARK: Size
 
 public extension Layout {
     @inlinable
@@ -118,6 +124,8 @@ public extension Layout {
     }
 }
 
+// MARK: Aspect ratio
+
 public extension Layout {
     @inlinable
     func aspectRatio(
@@ -133,6 +141,8 @@ public extension Layout {
         matchWidth(.equal, to: firstItem.heightAnchor, multiplier: ratio)
     }
 }
+
+// MARK: - Relation helpers
 
 extension NSLayoutDimension {
     @inlinable
