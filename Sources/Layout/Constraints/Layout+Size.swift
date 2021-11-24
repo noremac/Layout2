@@ -84,10 +84,10 @@ public extension Layout {
         _ relation: Relation,
         _ size: CGSize
     ) -> Layout {
-        addConstraints([
-            firstItem.widthAnchor.constraint(withRelation: .equal, constant: size.width),
-            firstItem.heightAnchor.constraint(withRelation: .equal, constant: size.height),
-        ])
+        merge {
+            width(relation, to: size.width)
+            height(relation, to: size.height)
+        }
     }
 
     @inlinable
@@ -100,27 +100,21 @@ public extension Layout {
     @inlinable
     func matchSize(
         _ relation: Relation = .equal,
-        to secondItem: LayoutContainer,
+        of secondItem: LayoutContainer? = nil,
         multiplier: CGFloat = 1
     ) -> Layout {
-        addConstraints([
-            firstItem
-                .widthAnchor
-                .constraint(
-                    withRelation: relation,
-                    to: secondItem.widthAnchor,
-                    multiplier: multiplier,
-                    constant: 0
-                ),
-            firstItem
-                .heightAnchor
-                .constraint(
-                    withRelation: relation,
-                    to: secondItem.heightAnchor,
-                    multiplier: multiplier,
-                    constant: 0
-                ),
-        ])
+        merge {
+            matchWidth(
+                relation,
+                to: (secondItem ?? firstItem.parentContainer).widthAnchor,
+                multiplier: multiplier
+            )
+            matchHeight(
+                relation,
+                to: (secondItem ?? firstItem.parentContainer).heightAnchor,
+                multiplier: multiplier
+            )
+        }
     }
 }
 
@@ -165,11 +159,23 @@ extension NSLayoutDimension {
     ) -> NSLayoutConstraint {
         switch relation {
         case .equal:
-            return constraint(equalTo: otherAnchor, multiplier: multiplier, constant: constant)
+            return constraint(
+                equalTo: otherAnchor,
+                multiplier: multiplier,
+                constant: constant
+            )
         case .lessThanOrEqual:
-            return constraint(lessThanOrEqualTo: otherAnchor, multiplier: multiplier, constant: constant)
+            return constraint(
+                lessThanOrEqualTo: otherAnchor,
+                multiplier: multiplier,
+                constant: constant
+            )
         case .greaterThanOrEqual:
-            return constraint(greaterThanOrEqualTo: otherAnchor, multiplier: multiplier, constant: constant)
+            return constraint(
+                greaterThanOrEqualTo: otherAnchor,
+                multiplier: multiplier,
+                constant: constant
+            )
         }
     }
 }

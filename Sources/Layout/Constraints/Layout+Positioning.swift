@@ -219,11 +219,20 @@ extension NSLayoutYAxisAnchor {
     ) -> NSLayoutConstraint {
         switch relation {
         case .equal:
-            return constraint(equalTo: otherAnchor, constant: constant)
+            return constraint(
+                equalTo: otherAnchor,
+                constant: constant
+            )
         case .lessThanOrEqual:
-            return constraint(lessThanOrEqualTo: otherAnchor, constant: constant)
+            return constraint(
+                lessThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
         case .greaterThanOrEqual:
-            return constraint(greaterThanOrEqualTo: otherAnchor, constant: constant)
+            return constraint(
+                greaterThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
         }
     }
 }
@@ -237,11 +246,20 @@ extension NSLayoutXAxisAnchor {
     ) -> NSLayoutConstraint {
         switch relation {
         case .equal:
-            return constraint(equalTo: otherAnchor, constant: constant)
+            return constraint(
+                equalTo: otherAnchor,
+                constant: constant
+            )
         case .lessThanOrEqual:
-            return constraint(lessThanOrEqualTo: otherAnchor, constant: constant)
+            return constraint(
+                lessThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
         case .greaterThanOrEqual:
-            return constraint(greaterThanOrEqualTo: otherAnchor, constant: constant)
+            return constraint(
+                greaterThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
         }
     }
 }
