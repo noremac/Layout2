@@ -53,6 +53,11 @@ public extension Layout {
     }
 
     @inlinable
+    func merge(@MultiLayoutBuilder _ layouts: () -> [Layout]) -> Layout {
+        addConstraints(layouts().flatMap(\._constraints))
+    }
+
+    @inlinable
     @discardableResult
     func activate() -> [NSLayoutConstraint] {
         NSLayoutConstraint.activate(_constraints)
@@ -83,13 +88,6 @@ public extension Layout {
             constraint.identifier = identifier
         }
         return self
-    }
-}
-
-public extension Layout {
-    @inlinable
-    func merge(@MultiLayoutBuilder _ layouts: () -> [Layout]) -> Layout {
-        addConstraints(layouts().flatMap(\._constraints))
     }
 }
 
