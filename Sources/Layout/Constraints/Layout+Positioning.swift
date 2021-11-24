@@ -83,7 +83,7 @@ public extension Layout {
         to secondItem: LayoutContainer? = nil,
         insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
     ) -> Layout {
-        addLayouts {
+        merge {
             if edges.contains(.top) {
                 self.top(
                     to: (secondItem ?? firstItem.parentContainer).topAnchor,
@@ -120,7 +120,7 @@ public extension Layout {
         within secondItem: LayoutContainer? = nil,
         insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
     ) -> Layout {
-        addLayouts {
+        merge {
             if edges.contains(.top) {
                 self.top(
                     .greaterThanOrEqual,

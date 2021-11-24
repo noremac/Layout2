@@ -88,7 +88,7 @@ public extension Layout {
 
 public extension Layout {
     @inlinable
-    func addLayouts(@MultiLayoutBuilder _ layouts: () -> [Layout]) -> Layout {
+    func merge(@MultiLayoutBuilder _ layouts: () -> [Layout]) -> Layout {
         addConstraints(layouts().flatMap(\._constraints))
     }
 }
