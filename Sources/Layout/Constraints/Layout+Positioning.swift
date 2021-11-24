@@ -9,7 +9,6 @@ import UIKit
 // MARK: - Edges
 
 public extension Layout {
-
     // MARK: Top
 
     @inlinable
@@ -172,7 +171,6 @@ public extension Layout {
 // MARK: - Centering
 
 public extension Layout {
-
     // MARK: X
 
     @inlinable

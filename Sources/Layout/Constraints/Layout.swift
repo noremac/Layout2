@@ -72,6 +72,7 @@ public extension Layout {
         }
         return self
     }
+
     #elseif canImport(AppKit)
     @inlinable
     func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
@@ -92,7 +93,7 @@ public extension Layout {
 }
 
 @resultBuilder
-public struct MultiLayoutBuilder {
+public enum MultiLayoutBuilder {
     public typealias Expression = Layout
     public typealias Component = [Expression]
 

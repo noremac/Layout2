@@ -1,0 +1,22 @@
+# format options
+
+--exponentcase lowercase
+--header strip
+--importgrouping testable-last
+--indent 4
+--ifdef no-indent
+--ranges no-space
+--self init-only
+--stripunusedargs unnamed-only
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--funcattributes prev-line
+--typeattributes prev-line
+--varattributes prev-line
+
+# rules
+
+--enable blankLinesBetweenScopes
+--disable hoistPatternLet
+--disable trailingClosures
