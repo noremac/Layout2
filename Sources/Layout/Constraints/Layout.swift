@@ -8,7 +8,7 @@ import UIKit
 
 // MARK: Layout
 
-public final class Layout: Hashable {
+public final class Layout {
     public var firstItem: LayoutContainer
 
     @usableFromInline
@@ -24,14 +24,6 @@ public final class Layout: Hashable {
     @inlinable
     public var constraints: [NSLayoutConstraint] {
         _constraints
-    }
-
-    public static func == (lhs: Layout, rhs: Layout) -> Bool {
-        lhs === rhs
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
     }
 }
 
