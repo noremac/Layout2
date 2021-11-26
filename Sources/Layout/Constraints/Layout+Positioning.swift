@@ -95,7 +95,7 @@ public extension Layout {
     ) -> Layout {
         merge {
             if edges.contains(.top) {
-                self.top(
+                top(
                     to: (secondItem ?? firstItem.parentContainer).topAnchor,
                     constant: insets.top
                 )
