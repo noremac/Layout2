@@ -94,35 +94,57 @@ public extension Layout {
         to secondItem: LayoutContainer? = nil,
         insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
     ) -> Layout {
-        merge {
-            if edges.contains(.top) {
-                top(
-                    to: (secondItem ?? firstItem.parentContainer).topAnchor,
-                    constant: insets.top
-                )
-            }
+        var constraints = [NSLayoutConstraint]()
 
-            if edges.contains(.leading) {
-                leading(
-                    to: (secondItem ?? firstItem.parentContainer).leadingAnchor,
-                    constant: insets.leading
-                )
-            }
-
-            if edges.contains(.bottom) {
-                bottom(
-                    to: (secondItem ?? firstItem.parentContainer).bottomAnchor,
-                    constant: -insets.bottom
-                )
-            }
-
-            if edges.contains(.trailing) {
-                trailing(
-                    to: (secondItem ?? firstItem.parentContainer).trailingAnchor,
-                    constant: -insets.trailing
-                )
-            }
+        if edges.contains(.top) {
+            constraints.append(
+                firstItem
+                    .topAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).topAnchor,
+                        constant: insets.top
+                    )
+            )
         }
+
+        if edges.contains(.leading) {
+            constraints.append(
+                firstItem
+                    .leadingAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).leadingAnchor,
+                        constant: insets.leading
+                    )
+            )
+        }
+
+        if edges.contains(.bottom) {
+            constraints.append(
+                firstItem
+                    .bottomAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).bottomAnchor,
+                        constant: -insets.bottom
+                    )
+            )
+        }
+
+        if edges.contains(.trailing) {
+            constraints.append(
+                firstItem
+                    .trailingAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).trailingAnchor,
+                        constant: -insets.trailing
+                    )
+            )
+        }
+
+        return addConstraints(constraints)
     }
 
     // MARK: Contain
@@ -133,39 +155,57 @@ public extension Layout {
         within secondItem: LayoutContainer? = nil,
         insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
     ) -> Layout {
-        merge {
-            if edges.contains(.top) {
-                self.top(
-                    .greaterThanOrEqual,
-                    to: (secondItem ?? firstItem.parentContainer).topAnchor,
-                    constant: insets.top
-                )
-            }
+        var constraints = [NSLayoutConstraint]()
 
-            if edges.contains(.leading) {
-                leading(
-                    .greaterThanOrEqual,
-                    to: (secondItem ?? firstItem.parentContainer).leadingAnchor,
-                    constant: insets.leading
-                )
-            }
-
-            if edges.contains(.bottom) {
-                bottom(
-                    .lessThanOrEqual,
-                    to: (secondItem ?? firstItem.parentContainer).bottomAnchor,
-                    constant: -insets.bottom
-                )
-            }
-
-            if edges.contains(.trailing) {
-                trailing(
-                    .lessThanOrEqual,
-                    to: (secondItem ?? firstItem.parentContainer).trailingAnchor,
-                    constant: -insets.trailing
-                )
-            }
+        if edges.contains(.top) {
+            constraints.append(
+                firstItem
+                    .topAnchor
+                    .constraint(
+                        withRelation: .greaterThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).topAnchor,
+                        constant: insets.top
+                    )
+            )
         }
+
+        if edges.contains(.leading) {
+            constraints.append(
+                firstItem
+                    .leadingAnchor
+                    .constraint(
+                        withRelation: .greaterThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).leadingAnchor,
+                        constant: insets.leading
+                    )
+            )
+        }
+
+        if edges.contains(.bottom) {
+            constraints.append(
+                firstItem
+                    .bottomAnchor
+                    .constraint(
+                        withRelation: .lessThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).bottomAnchor,
+                        constant: -insets.bottom
+                    )
+            )
+        }
+
+        if edges.contains(.trailing) {
+            constraints.append(
+                firstItem
+                    .trailingAnchor
+                    .constraint(
+                        withRelation: .lessThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).trailingAnchor,
+                        constant: -insets.trailing
+                    )
+            )
+        }
+
+        return addConstraints(constraints)
     }
 }
 
