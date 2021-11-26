@@ -8,8 +8,8 @@ import UIKit
 
 // MARK: Layout
 
-public final class Layout {
-    public let firstItem: LayoutContainer
+public final class Layout: Hashable {
+    public var firstItem: LayoutContainer
 
     @usableFromInline
     internal var _constraints: [NSLayoutConstraint] = []
@@ -24,6 +24,14 @@ public final class Layout {
     @inlinable
     public var constraints: [NSLayoutConstraint] {
         _constraints
+    }
+
+    public static func == (lhs: Layout, rhs: Layout) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 
@@ -53,8 +61,8 @@ public extension Layout {
     }
 
     @inlinable
-    func merge(@MultiLayoutBuilder _ layouts: () -> [Layout]) -> Layout {
-        addConstraints(layouts().flatMap(\._constraints))
+    func merge(@MultiLayoutBuilder _ layout: () -> Layout) -> Layout {
+        layout()
     }
 
     @inlinable
@@ -94,21 +102,35 @@ public extension Layout {
 
 @resultBuilder
 public enum MultiLayoutBuilder {
-    public typealias Expression = Layout
-    public typealias Component = [Expression]
+    public typealias Component = Layout
+
+    #if canImport(UIKit)
+    @usableFromInline
+    static let dummyView = UIView()
+    #elseif canImport(AppKit)
+    @usableFromInline
+    static let dummyView = NSView()
+    #endif
 
     @inlinable
-    public static func buildExpression(_ expression: Layout) -> [Layout] {
-        [expression]
+    static func buildBlock(_ components: Layout...) -> Layout {
+        guard let first = components.first else {
+            return Layout(dummyView)
+        }
+
+        let set = Set(components)
+
+        if set.count == 1 {
+            return first
+        } else {
+            return set.subtracting([first]).reduce(into: first) { acc, next in
+                acc._constraints += next._constraints
+            }
+        }
     }
 
     @inlinable
-    static func buildBlock(_ components: [Layout]...) -> [Layout] {
-        components.flatMap({ $0 })
-    }
-
-    @inlinable
-    public static func buildOptional(_ component: [Layout]?) -> [Layout] {
-        component ?? []
+    public static func buildOptional(_ component: Layout?) -> Layout {
+        component ?? Layout(dummyView)
     }
 }
