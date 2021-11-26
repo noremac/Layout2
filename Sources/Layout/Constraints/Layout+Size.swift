@@ -90,10 +90,10 @@ public extension Layout {
         _ relation: Relation,
         _ size: CGSize
     ) -> Layout {
-        merge {
-            width(relation, to: size.width)
-            height(relation, to: size.height)
-        }
+        addConstraints([
+            firstItem.widthAnchor.constraint(withRelation: relation, constant: size.width),
+            firstItem.heightAnchor.constraint(withRelation: relation, constant: size.height),
+        ])
     }
 
     @inlinable
@@ -109,18 +109,24 @@ public extension Layout {
         of secondItem: LayoutContainer? = nil,
         multiplier: CGFloat = 1
     ) -> Layout {
-        merge {
-            matchWidth(
-                relation,
-                to: (secondItem ?? firstItem.parentContainer).widthAnchor,
-                multiplier: multiplier
-            )
-            matchHeight(
-                relation,
-                to: (secondItem ?? firstItem.parentContainer).heightAnchor,
-                multiplier: multiplier
-            )
-        }
+        addConstraints([
+            firstItem
+                .widthAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: (secondItem ?? firstItem.parentContainer).widthAnchor,
+                    multiplier: multiplier,
+                    constant: 0
+                ),
+            firstItem
+                .heightAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: (secondItem ?? firstItem.parentContainer).heightAnchor,
+                    multiplier: multiplier,
+                    constant: 0
+                ),
+        ])
     }
 }
 

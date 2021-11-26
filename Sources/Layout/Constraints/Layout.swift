@@ -61,11 +61,6 @@ public extension Layout {
     }
 
     @inlinable
-    func merge(@MultiLayoutBuilder _ layout: () -> Layout) -> Layout {
-        layout()
-    }
-
-    @inlinable
     @discardableResult
     func activate() -> [NSLayoutConstraint] {
         NSLayoutConstraint.activate(_constraints)
@@ -97,40 +92,5 @@ public extension Layout {
             constraint.identifier = identifier
         }
         return self
-    }
-}
-
-@resultBuilder
-public enum MultiLayoutBuilder {
-    public typealias Component = Layout
-
-    #if canImport(UIKit)
-    @usableFromInline
-    static let dummyView = UIView()
-    #elseif canImport(AppKit)
-    @usableFromInline
-    static let dummyView = NSView()
-    #endif
-
-    @inlinable
-    static func buildBlock(_ components: Layout...) -> Layout {
-        guard let first = components.first else {
-            return Layout(dummyView)
-        }
-
-        let set = Set(components)
-
-        if set.count == 1 {
-            return first
-        } else {
-            return set.subtracting([first]).reduce(into: first) { acc, next in
-                acc._constraints += next._constraints
-            }
-        }
-    }
-
-    @inlinable
-    public static func buildOptional(_ component: Layout?) -> Layout {
-        component ?? Layout(dummyView)
     }
 }
