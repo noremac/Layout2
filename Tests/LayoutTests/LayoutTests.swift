@@ -45,7 +45,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .top()
             .constraints
-        let expected = [view.topAnchor.constraint(equalTo: parent.topAnchor)]
+        let expected = [
+            view.topAnchor.constraint(equalTo: parent.topAnchor),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -54,7 +56,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .top(.lessThanOrEqual, to: otherView.bottomAnchor, constant: 2)
             .constraints
-        let expected = [view.topAnchor.constraint(lessThanOrEqualTo: otherView.bottomAnchor, constant: 2)]
+        let expected = [
+            view.topAnchor.constraint(lessThanOrEqualTo: otherView.bottomAnchor, constant: 2),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -63,7 +67,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .leading()
             .constraints
-        let expected = [view.leadingAnchor.constraint(equalTo: parent.leadingAnchor)]
+        let expected = [
+            view.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -72,7 +78,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .leading(.lessThanOrEqual, to: otherView.trailingAnchor, constant: 2)
             .constraints
-        let expected = [view.leadingAnchor.constraint(lessThanOrEqualTo: otherView.trailingAnchor, constant: 2)]
+        let expected = [
+            view.leadingAnchor.constraint(lessThanOrEqualTo: otherView.trailingAnchor, constant: 2),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -81,7 +89,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .bottom()
             .constraints
-        let expected = [view.bottomAnchor.constraint(equalTo: parent.bottomAnchor)]
+        let expected = [
+            view.bottomAnchor.constraint(equalTo: parent.bottomAnchor),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -90,7 +100,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .bottom(.lessThanOrEqual, to: otherView.topAnchor, constant: 2)
             .constraints
-        let expected = [view.bottomAnchor.constraint(lessThanOrEqualTo: otherView.topAnchor, constant: 2)]
+        let expected = [
+            view.bottomAnchor.constraint(lessThanOrEqualTo: otherView.topAnchor, constant: 2),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -99,7 +111,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .trailing()
             .constraints
-        let expected = [view.trailingAnchor.constraint(equalTo: parent.trailingAnchor)]
+        let expected = [
+            view.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -108,7 +122,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .trailing(.lessThanOrEqual, to: otherView.leadingAnchor, constant: 2)
             .constraints
-        let expected = [view.trailingAnchor.constraint(lessThanOrEqualTo: otherView.leadingAnchor, constant: 2)]
+        let expected = [
+            view.trailingAnchor.constraint(lessThanOrEqualTo: otherView.leadingAnchor, constant: 2),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -146,7 +162,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .alignEdges(.top)
                 .constraints
-            let expected = [view.topAnchor.constraint(equalTo: parent.topAnchor)]
+            let expected = [
+                view.topAnchor.constraint(equalTo: parent.topAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
 
@@ -155,7 +173,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .alignEdges(.leading)
                 .constraints
-            let expected = [view.leadingAnchor.constraint(equalTo: parent.leadingAnchor)]
+            let expected = [
+                view.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
 
@@ -164,7 +184,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .alignEdges(.bottom)
                 .constraints
-            let expected = [view.bottomAnchor.constraint(equalTo: parent.bottomAnchor)]
+            let expected = [
+                view.bottomAnchor.constraint(equalTo: parent.bottomAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
 
@@ -173,7 +195,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .alignEdges(.trailing)
                 .constraints
-            let expected = [view.trailingAnchor.constraint(equalTo: parent.trailingAnchor)]
+            let expected = [
+                view.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
     }
@@ -212,7 +236,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .containEdges(.top)
                 .constraints
-            let expected = [view.topAnchor.constraint(greaterThanOrEqualTo: parent.topAnchor)]
+            let expected = [
+                view.topAnchor.constraint(greaterThanOrEqualTo: parent.topAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
 
@@ -221,7 +247,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .containEdges(.leading)
                 .constraints
-            let expected = [view.leadingAnchor.constraint(greaterThanOrEqualTo: parent.leadingAnchor)]
+            let expected = [
+                view.leadingAnchor.constraint(greaterThanOrEqualTo: parent.leadingAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
 
@@ -230,7 +258,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .containEdges(.bottom)
                 .constraints
-            let expected = [view.bottomAnchor.constraint(lessThanOrEqualTo: parent.bottomAnchor)]
+            let expected = [
+                view.bottomAnchor.constraint(lessThanOrEqualTo: parent.bottomAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
 
@@ -239,7 +269,9 @@ final class LayoutTests: XCTestCase {
                 .layout
                 .containEdges(.trailing)
                 .constraints
-            let expected = [view.trailingAnchor.constraint(lessThanOrEqualTo: parent.trailingAnchor)]
+            let expected = [
+                view.trailingAnchor.constraint(lessThanOrEqualTo: parent.trailingAnchor),
+            ]
             AssertConstraintsEqual(constraints, expected)
         }
     }
@@ -249,7 +281,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .centerX()
             .constraints
-        let expected = [view.centerXAnchor.constraint(equalTo: parent.centerXAnchor)]
+        let expected = [
+            view.centerXAnchor.constraint(equalTo: parent.centerXAnchor),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -258,7 +292,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .centerX(.lessThanOrEqual, to: otherView.leadingAnchor, constant: 2)
             .constraints
-        let expected = [view.centerXAnchor.constraint(lessThanOrEqualTo: otherView.leadingAnchor, constant: 2)]
+        let expected = [
+            view.centerXAnchor.constraint(lessThanOrEqualTo: otherView.leadingAnchor, constant: 2),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -267,7 +303,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .centerY()
             .constraints
-        let expected = [view.centerYAnchor.constraint(equalTo: parent.centerYAnchor)]
+        let expected = [
+            view.centerYAnchor.constraint(equalTo: parent.centerYAnchor),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -276,7 +314,9 @@ final class LayoutTests: XCTestCase {
             .layout
             .centerY(.lessThanOrEqual, to: otherView.topAnchor, constant: 2)
             .constraints
-        let expected = [view.centerYAnchor.constraint(lessThanOrEqualTo: otherView.topAnchor, constant: 2)]
+        let expected = [
+            view.centerYAnchor.constraint(lessThanOrEqualTo: otherView.topAnchor, constant: 2),
+        ]
         AssertConstraintsEqual(constraints, expected)
     }
 
@@ -300,6 +340,164 @@ final class LayoutTests: XCTestCase {
         let expected = [
             view.centerXAnchor.constraint(equalTo: otherView.centerXAnchor),
             view.centerYAnchor.constraint(equalTo: otherView.centerYAnchor),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testMatchWidthDefault() {
+        let constraints = view
+            .layout
+            .matchWidth()
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(equalTo: parent.widthAnchor),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testMatchWidthCustom() {
+        let constraints = view
+            .layout
+            .matchWidth(.lessThanOrEqual, to: otherView.heightAnchor, multiplier: 2, constant: 3)
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(lessThanOrEqualTo: otherView.heightAnchor, multiplier: 2, constant: 3),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testMatchHeightDefault() {
+        let constraints = view
+            .layout
+            .matchHeight()
+            .constraints
+        let expected = [
+            view.heightAnchor.constraint(equalTo: parent.heightAnchor),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testMatchHeightCustom() {
+        let constraints = view
+            .layout
+            .matchHeight(.lessThanOrEqual, to: otherView.widthAnchor, multiplier: 2, constant: 3)
+            .constraints
+        let expected = [
+            view.heightAnchor.constraint(lessThanOrEqualTo: otherView.widthAnchor, multiplier: 2, constant: 3),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testWidthRelation() {
+        let constraints = view
+            .layout
+            .width(.lessThanOrEqual, to: 1)
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(lessThanOrEqualToConstant: 1),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testWidth() {
+        let constraints = view
+            .layout
+            .width(1)
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(equalToConstant: 1),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testHeightRelation() {
+        let constraints = view
+            .layout
+            .height(.lessThanOrEqual, to: 1)
+            .constraints
+        let expected = [
+            view.heightAnchor.constraint(lessThanOrEqualToConstant: 1),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testHeight() {
+        let constraints = view
+            .layout
+            .height(1)
+            .constraints
+        let expected = [
+            view.heightAnchor.constraint(equalToConstant: 1),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testSizeRelation() {
+        let constraints = view
+            .layout
+            .size(.lessThanOrEqual, to: CGSize(width: 1, height: 2))
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(lessThanOrEqualToConstant: 1),
+            view.heightAnchor.constraint(lessThanOrEqualToConstant: 2),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testSize() {
+        let constraints = view
+            .layout
+            .size(CGSize(width: 1, height: 2))
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(equalToConstant: 1),
+            view.heightAnchor.constraint(equalToConstant: 2),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testMatchSizeDefault() {
+        let constraints = view
+            .layout
+            .matchSize()
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(equalTo: parent.widthAnchor, multiplier: 1, constant: 0),
+            view.heightAnchor.constraint(equalTo: parent.heightAnchor, multiplier: 1, constant: 0),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testMatchSizeCustom() {
+        let constraints = view
+            .layout
+            .matchSize(.lessThanOrEqual, to: otherView, multiplier: 2)
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(lessThanOrEqualTo: otherView.widthAnchor, multiplier: 2, constant: 0),
+            view.heightAnchor.constraint(lessThanOrEqualTo: otherView.heightAnchor, multiplier: 2, constant: 0),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testAspectRatioSize() {
+        let constraints = view
+            .layout
+            .aspectRatio(CGSize(width: 3, height: 2))
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(equalTo: view.heightAnchor, multiplier: 3 / 2, constant: 0),
+        ]
+        AssertConstraintsEqual(constraints, expected)
+    }
+
+    func testAspectRatio() {
+        let constraints = view
+            .layout
+            .aspectRatio(3 / 2)
+            .constraints
+        let expected = [
+            view.widthAnchor.constraint(equalTo: view.heightAnchor, multiplier: 3 / 2, constant: 0),
         ]
         AssertConstraintsEqual(constraints, expected)
     }

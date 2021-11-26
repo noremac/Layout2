@@ -88,7 +88,7 @@ public extension Layout {
     @inlinable
     func size(
         _ relation: Relation,
-        _ size: CGSize
+        to size: CGSize
     ) -> Layout {
         addConstraints([
             firstItem.widthAnchor.constraint(withRelation: relation, constant: size.width),
@@ -100,13 +100,13 @@ public extension Layout {
     func size(
         _ size: CGSize
     ) -> Layout {
-        self.size(.equal, size)
+        self.size(.equal, to: size)
     }
 
     @inlinable
     func matchSize(
         _ relation: Relation = .equal,
-        of secondItem: LayoutContainer? = nil,
+        to secondItem: LayoutContainer? = nil,
         multiplier: CGFloat = 1
     ) -> Layout {
         addConstraints([
