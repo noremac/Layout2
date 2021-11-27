@@ -43,11 +43,7 @@ func AssertConstraintsEqual<C1, C2>(
     let m1 = c1.map(EquatableConstraintWrapper.init(constraint:))
     let m2 = c2.map(EquatableConstraintWrapper.init(constraint:))
 
-    let allMatch = m1.allSatisfy {
-        m2.contains($0)
-    }
-
-    if !allMatch {
-        return fail()
+    if !m1.allSatisfy(m2.contains(_:)) {
+        fail()
     }
 }
