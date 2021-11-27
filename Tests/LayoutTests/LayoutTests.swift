@@ -400,10 +400,10 @@ final class LayoutTests: XCTestCase {
     func testMatchWidthCustom() {
         let constraints = view
             .layout
-            .matchWidth(.lessThanOrEqual, to: otherView.heightAnchor, multiplier: 2, constant: 3)
+            .matchWidth(.greaterThanOrEqual, to: otherView.heightAnchor, multiplier: 2, constant: 3)
             .constraints
         let expected = [
-            view.widthAnchor.constraint(lessThanOrEqualTo: otherView.heightAnchor, multiplier: 2, constant: 3),
+            view.widthAnchor.constraint(greaterThanOrEqualTo: otherView.heightAnchor, multiplier: 2, constant: 3),
         ]
         AssertConstraintsEqual(constraints, expected)
     }
@@ -433,10 +433,10 @@ final class LayoutTests: XCTestCase {
     func testWidthRelation() {
         let constraints = view
             .layout
-            .width(.lessThanOrEqual, to: 1)
+            .width(.greaterThanOrEqual, to: 1)
             .constraints
         let expected = [
-            view.widthAnchor.constraint(lessThanOrEqualToConstant: 1),
+            view.widthAnchor.constraint(greaterThanOrEqualToConstant: 1),
         ]
         AssertConstraintsEqual(constraints, expected)
     }
