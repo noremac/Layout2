@@ -50,7 +50,6 @@ public extension Layout {
         }
         return self
     }
-
     #elseif canImport(AppKit)
     func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
         _lastAddedConstraints.forEach { constraint in
@@ -59,6 +58,7 @@ public extension Layout {
         return self
     }
     #endif
+
     func identifier(_ identifier: String?) -> Layout {
         _lastAddedConstraints.forEach { constraint in
             constraint.identifier = identifier
