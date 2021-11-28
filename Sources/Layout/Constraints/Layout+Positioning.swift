@@ -6,13 +6,7 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
-// MARK: - Edges
-
 public extension Layout {
-
-    // MARK: Top
-
-    @inlinable
     func top(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -29,9 +23,6 @@ public extension Layout {
         )
     }
 
-    // MARK: Leading
-
-    @inlinable
     func leading(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -48,9 +39,6 @@ public extension Layout {
         )
     }
 
-    // MARK: Bottom
-
-    @inlinable
     func bottom(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -67,9 +55,6 @@ public extension Layout {
         )
     }
 
-    // MARK: Trailing
-
-    @inlinable
     func trailing(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -86,9 +71,6 @@ public extension Layout {
         )
     }
 
-    // MARK: Align
-
-    @inlinable
     func alignEdges(
         _ edges: NSDirectionalRectEdge = .all,
         to secondItem: LayoutContainer? = nil,
@@ -147,9 +129,6 @@ public extension Layout {
         return addConstraints(constraints)
     }
 
-    // MARK: Contain
-
-    @inlinable
     func containEdges(
         _ edges: NSDirectionalRectEdge,
         within secondItem: LayoutContainer? = nil,
@@ -209,13 +188,7 @@ public extension Layout {
     }
 }
 
-// MARK: - Centering
-
 public extension Layout {
-
-    // MARK: X
-
-    @inlinable
     func centerX(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -232,9 +205,6 @@ public extension Layout {
         )
     }
 
-    // MARK: Y
-
-    @inlinable
     func centerY(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -251,9 +221,6 @@ public extension Layout {
         )
     }
 
-    // MARK: X/Y
-
-    @inlinable
     func center(
         within secondItem: LayoutContainer? = nil
     ) -> Layout {
@@ -272,10 +239,7 @@ public extension Layout {
     }
 }
 
-// MARK: - Relation helpers
-
 extension NSLayoutYAxisAnchor {
-    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutYAxisAnchor,
@@ -302,7 +266,6 @@ extension NSLayoutYAxisAnchor {
 }
 
 extension NSLayoutXAxisAnchor {
-    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutXAxisAnchor,

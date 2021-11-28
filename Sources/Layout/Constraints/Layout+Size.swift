@@ -6,10 +6,7 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
-// MARK: Width
-
 public extension Layout {
-    @inlinable
     func matchWidth(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
@@ -28,7 +25,6 @@ public extension Layout {
         )
     }
 
-    @inlinable
     func width(
         _ relation: Relation,
         to constant: CGFloat
@@ -36,7 +32,6 @@ public extension Layout {
         addConstraint(firstItem.widthAnchor.constraint(withRelation: relation, constant: constant))
     }
 
-    @inlinable
     func width(
         _ constant: CGFloat
     ) -> Layout {
@@ -44,10 +39,7 @@ public extension Layout {
     }
 }
 
-// MARK: Height
-
 public extension Layout {
-    @inlinable
     func matchHeight(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
@@ -66,7 +58,6 @@ public extension Layout {
         )
     }
 
-    @inlinable
     func height(
         _ relation: Relation,
         to constant: CGFloat
@@ -74,7 +65,6 @@ public extension Layout {
         addConstraint(firstItem.heightAnchor.constraint(withRelation: relation, constant: constant))
     }
 
-    @inlinable
     func height(
         _ constant: CGFloat
     ) -> Layout {
@@ -82,10 +72,7 @@ public extension Layout {
     }
 }
 
-// MARK: Size
-
 public extension Layout {
-    @inlinable
     func size(
         _ relation: Relation,
         to size: CGSize
@@ -96,14 +83,12 @@ public extension Layout {
         ])
     }
 
-    @inlinable
     func size(
         _ size: CGSize
     ) -> Layout {
         self.size(.equal, to: size)
     }
 
-    @inlinable
     func matchSize(
         _ relation: Relation = .equal,
         to secondItem: LayoutContainer? = nil,
@@ -130,17 +115,13 @@ public extension Layout {
     }
 }
 
-// MARK: Aspect ratio
-
 public extension Layout {
-    @inlinable
     func aspectRatio(
         _ size: CGSize
     ) -> Layout {
         aspectRatio(size.width / size.height)
     }
 
-    @inlinable
     func aspectRatio(
         _ ratio: CGFloat
     ) -> Layout {
@@ -148,10 +129,7 @@ public extension Layout {
     }
 }
 
-// MARK: - Relation helpers
-
 extension NSLayoutDimension {
-    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         constant: CGFloat
@@ -166,7 +144,6 @@ extension NSLayoutDimension {
         }
     }
 
-    @inlinable
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutDimension,

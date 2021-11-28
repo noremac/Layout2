@@ -6,28 +6,21 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
-// MARK: Layout
-
 public final class Layout {
     public var firstItem: LayoutContainer
 
-    @usableFromInline
     internal var _constraints: [NSLayoutConstraint] = []
 
-    @usableFromInline
     internal var _lastAddedConstraints: [NSLayoutConstraint] = []
 
     public init(_ firstItem: LayoutContainer) {
         self.firstItem = firstItem
     }
 
-    @inlinable
     public var constraints: [NSLayoutConstraint] {
         _constraints
     }
 }
-
-// MARK: Relation
 
 public extension Layout {
     enum Relation {
@@ -37,22 +30,17 @@ public extension Layout {
     }
 }
 
-// MARK: Building blocks
-
 public extension Layout {
-    @inlinable
     func addConstraints(_ constraints: [NSLayoutConstraint]) -> Layout {
         _constraints.append(contentsOf: constraints)
         _lastAddedConstraints = constraints
         return self
     }
 
-    @inlinable
     func addConstraint(_ constraint: NSLayoutConstraint) -> Layout {
         addConstraints([constraint])
     }
 
-    @inlinable
     @discardableResult
     func activate() -> [NSLayoutConstraint] {
         NSLayoutConstraint.activate(_constraints)
@@ -60,7 +48,6 @@ public extension Layout {
     }
 
     #if canImport(UIKit)
-    @inlinable
     func priority(_ priority: UILayoutPriority) -> Layout {
         _lastAddedConstraints.forEach { constraint in
             constraint.priority = priority
@@ -69,7 +56,6 @@ public extension Layout {
     }
 
     #elseif canImport(AppKit)
-    @inlinable
     func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
         _lastAddedConstraints.forEach { constraint in
             constraint.priority = priority
@@ -77,8 +63,6 @@ public extension Layout {
         return self
     }
     #endif
-
-    @inlinable
     func identifier(_ identifier: String?) -> Layout {
         _lastAddedConstraints.forEach { constraint in
             constraint.identifier = identifier

@@ -6,8 +6,6 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
-// MARK: DynamicLayout
-
 public final class DynamicLayout<State> {
     private let mainScope = Scope(.always)
 
@@ -48,8 +46,6 @@ public final class DynamicLayout<State> {
     }
 }
 
-// MARK: - Predicate
-
 public extension DynamicLayout {
     struct Predicate {
         let closure: (State) -> Bool
@@ -71,8 +67,6 @@ public extension DynamicLayout.Predicate {
         self.init({ _ in true })
     }
 }
-
-// MARK: - Scope
 
 extension DynamicLayout {
     final class Scope {
@@ -109,8 +103,6 @@ extension DynamicLayout.Scope {
     }
 }
 
-// MARK: - Configuration
-
 public extension DynamicLayout {
     final class Configuration {
         var currentScope: Scope
@@ -120,8 +112,6 @@ public extension DynamicLayout {
         }
     }
 }
-
-// MARK: Conditionals
 
 public extension DynamicLayout.Configuration {
     func when(_ predicate: DynamicLayout.Predicate, _ whenBlock: () -> Void, otherwise otherwiseBlock: () -> Void) {
@@ -160,8 +150,6 @@ public extension DynamicLayout.Configuration {
     }
 }
 
-// MARK: Actions
-
 public extension DynamicLayout.Configuration {
     func action(_ action: @escaping (State) -> Void) {
         currentScope.actions.append(action)
@@ -173,8 +161,6 @@ public extension DynamicLayout.Configuration {
         }
     }
 }
-
-// MARK: Constraints
 
 public extension DynamicLayout.Configuration {
     func constraints(@DynamicLayoutConstraintBuilder _ constraints: () -> [NSLayoutConstraint]) {
