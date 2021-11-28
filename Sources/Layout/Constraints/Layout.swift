@@ -9,16 +9,12 @@ import UIKit
 public final class Layout {
     public var firstItem: LayoutContainer
 
-    internal var _constraints: [NSLayoutConstraint] = []
+    public internal(set) var constraints: [NSLayoutConstraint] = []
 
-    internal var _lastAddedConstraints: [NSLayoutConstraint] = []
+    var _lastAddedConstraints: [NSLayoutConstraint] = []
 
     public init(_ firstItem: LayoutContainer) {
         self.firstItem = firstItem
-    }
-
-    public var constraints: [NSLayoutConstraint] {
-        _constraints
     }
 }
 
@@ -32,7 +28,7 @@ public extension Layout {
 
 public extension Layout {
     func addConstraints(_ constraints: [NSLayoutConstraint]) -> Layout {
-        _constraints.append(contentsOf: constraints)
+        self.constraints.append(contentsOf: constraints)
         _lastAddedConstraints = constraints
         return self
     }
@@ -43,8 +39,8 @@ public extension Layout {
 
     @discardableResult
     func activate() -> [NSLayoutConstraint] {
-        NSLayoutConstraint.activate(_constraints)
-        return _constraints
+        NSLayoutConstraint.activate(constraints)
+        return constraints
     }
 
     #if canImport(UIKit)

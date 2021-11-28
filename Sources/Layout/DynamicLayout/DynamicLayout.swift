@@ -171,6 +171,6 @@ public extension DynamicLayout.Configuration {
 @resultBuilder
 public enum DynamicLayoutConstraintBuilder {
     public static func buildBlock(_ components: Layout...) -> [NSLayoutConstraint] {
-        components.flatMap(\._constraints)
+        components.flatMap(\.constraints)
     }
 }
