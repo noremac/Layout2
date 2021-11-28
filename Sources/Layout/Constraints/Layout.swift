@@ -66,3 +66,446 @@ public extension Layout {
         return self
     }
 }
+
+public extension Layout {
+    func top(
+        _ relation: Relation = .equal,
+        to anchor: NSLayoutYAxisAnchor? = nil,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .topAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: anchor ?? firstItem.parentContainer.topAnchor,
+                    constant: constant
+                )
+        )
+    }
+
+    func leading(
+        _ relation: Relation = .equal,
+        to anchor: NSLayoutXAxisAnchor? = nil,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .leadingAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: anchor ?? firstItem.parentContainer.leadingAnchor,
+                    constant: constant
+                )
+        )
+    }
+
+    func bottom(
+        _ relation: Relation = .equal,
+        to anchor: NSLayoutYAxisAnchor? = nil,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .bottomAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: anchor ?? firstItem.parentContainer.bottomAnchor,
+                    constant: constant
+                )
+        )
+    }
+
+    func trailing(
+        _ relation: Relation = .equal,
+        to anchor: NSLayoutXAxisAnchor? = nil,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .trailingAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: anchor ?? firstItem.parentContainer.trailingAnchor,
+                    constant: constant
+                )
+        )
+    }
+
+    func alignEdges(
+        _ edges: NSDirectionalRectEdge = .all,
+        to secondItem: LayoutContainer? = nil,
+        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+    ) -> Layout {
+        var constraints = [NSLayoutConstraint]()
+
+        if edges.contains(.top) {
+            constraints.append(
+                firstItem
+                    .topAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).topAnchor,
+                        constant: insets.top
+                    )
+            )
+        }
+
+        if edges.contains(.leading) {
+            constraints.append(
+                firstItem
+                    .leadingAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).leadingAnchor,
+                        constant: insets.leading
+                    )
+            )
+        }
+
+        if edges.contains(.bottom) {
+            constraints.append(
+                firstItem
+                    .bottomAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).bottomAnchor,
+                        constant: -insets.bottom
+                    )
+            )
+        }
+
+        if edges.contains(.trailing) {
+            constraints.append(
+                firstItem
+                    .trailingAnchor
+                    .constraint(
+                        withRelation: .equal,
+                        to: (secondItem ?? firstItem.parentContainer).trailingAnchor,
+                        constant: -insets.trailing
+                    )
+            )
+        }
+
+        return addConstraints(constraints)
+    }
+
+    func containEdges(
+        _ edges: NSDirectionalRectEdge,
+        within secondItem: LayoutContainer? = nil,
+        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+    ) -> Layout {
+        var constraints = [NSLayoutConstraint]()
+
+        if edges.contains(.top) {
+            constraints.append(
+                firstItem
+                    .topAnchor
+                    .constraint(
+                        withRelation: .greaterThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).topAnchor,
+                        constant: insets.top
+                    )
+            )
+        }
+
+        if edges.contains(.leading) {
+            constraints.append(
+                firstItem
+                    .leadingAnchor
+                    .constraint(
+                        withRelation: .greaterThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).leadingAnchor,
+                        constant: insets.leading
+                    )
+            )
+        }
+
+        if edges.contains(.bottom) {
+            constraints.append(
+                firstItem
+                    .bottomAnchor
+                    .constraint(
+                        withRelation: .lessThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).bottomAnchor,
+                        constant: -insets.bottom
+                    )
+            )
+        }
+
+        if edges.contains(.trailing) {
+            constraints.append(
+                firstItem
+                    .trailingAnchor
+                    .constraint(
+                        withRelation: .lessThanOrEqual,
+                        to: (secondItem ?? firstItem.parentContainer).trailingAnchor,
+                        constant: -insets.trailing
+                    )
+            )
+        }
+
+        return addConstraints(constraints)
+    }
+
+    func centerX(
+        _ relation: Relation = .equal,
+        to anchor: NSLayoutXAxisAnchor? = nil,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .centerXAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: anchor ?? firstItem.parentContainer.centerXAnchor,
+                    constant: constant
+                )
+        )
+    }
+
+    func centerY(
+        _ relation: Relation = .equal,
+        to anchor: NSLayoutYAxisAnchor? = nil,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .centerYAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: anchor ?? firstItem.parentContainer.centerYAnchor,
+                    constant: constant
+                )
+        )
+    }
+
+    func center(
+        within secondItem: LayoutContainer? = nil
+    ) -> Layout {
+        addConstraints([
+            firstItem
+                .centerXAnchor
+                .constraint(
+                    equalTo: (secondItem ?? firstItem.parentContainer).centerXAnchor
+                ),
+            firstItem
+                .centerYAnchor
+                .constraint(
+                    equalTo: (secondItem ?? firstItem.parentContainer).centerYAnchor
+                ),
+        ])
+    }
+
+    func matchWidth(
+        _ relation: Relation = .equal,
+        to secondItem: NSLayoutDimension? = nil,
+        multiplier: CGFloat = 1,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .widthAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: secondItem ?? firstItem.parentContainer.widthAnchor,
+                    multiplier: multiplier,
+                    constant: constant
+                )
+        )
+    }
+
+    func width(
+        _ relation: Relation,
+        to constant: CGFloat
+    ) -> Layout {
+        addConstraint(firstItem.widthAnchor.constraint(withRelation: relation, constant: constant))
+    }
+
+    func width(
+        _ constant: CGFloat
+    ) -> Layout {
+        width(.equal, to: constant)
+    }
+
+    func matchHeight(
+        _ relation: Relation = .equal,
+        to secondItem: NSLayoutDimension? = nil,
+        multiplier: CGFloat = 1,
+        constant: CGFloat = 0
+    ) -> Layout {
+        addConstraint(
+            firstItem
+                .heightAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: secondItem ?? firstItem.parentContainer.heightAnchor,
+                    multiplier: multiplier,
+                    constant: constant
+                )
+        )
+    }
+
+    func height(
+        _ relation: Relation,
+        to constant: CGFloat
+    ) -> Layout {
+        addConstraint(firstItem.heightAnchor.constraint(withRelation: relation, constant: constant))
+    }
+
+    func height(
+        _ constant: CGFloat
+    ) -> Layout {
+        height(.equal, to: constant)
+    }
+
+    func size(
+        _ relation: Relation,
+        to size: CGSize
+    ) -> Layout {
+        addConstraints([
+            firstItem.widthAnchor.constraint(withRelation: relation, constant: size.width),
+            firstItem.heightAnchor.constraint(withRelation: relation, constant: size.height),
+        ])
+    }
+
+    func size(
+        _ size: CGSize
+    ) -> Layout {
+        self.size(.equal, to: size)
+    }
+
+    func matchSize(
+        _ relation: Relation = .equal,
+        to secondItem: LayoutContainer? = nil,
+        multiplier: CGFloat = 1
+    ) -> Layout {
+        addConstraints([
+            firstItem
+                .widthAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: (secondItem ?? firstItem.parentContainer).widthAnchor,
+                    multiplier: multiplier,
+                    constant: 0
+                ),
+            firstItem
+                .heightAnchor
+                .constraint(
+                    withRelation: relation,
+                    to: (secondItem ?? firstItem.parentContainer).heightAnchor,
+                    multiplier: multiplier,
+                    constant: 0
+                ),
+        ])
+    }
+
+    func aspectRatio(
+        _ size: CGSize
+    ) -> Layout {
+        aspectRatio(size.width / size.height)
+    }
+
+    func aspectRatio(
+        _ ratio: CGFloat
+    ) -> Layout {
+        matchWidth(.equal, to: firstItem.heightAnchor, multiplier: ratio)
+    }
+}
+
+extension NSLayoutYAxisAnchor {
+    func constraint(
+        withRelation relation: Layout.Relation,
+        to otherAnchor: NSLayoutYAxisAnchor,
+        constant: CGFloat
+    ) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return constraint(
+                equalTo: otherAnchor,
+                constant: constant
+            )
+        case .lessThanOrEqual:
+            return constraint(
+                lessThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
+        case .greaterThanOrEqual:
+            return constraint(
+                greaterThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
+        }
+    }
+}
+
+extension NSLayoutXAxisAnchor {
+    func constraint(
+        withRelation relation: Layout.Relation,
+        to otherAnchor: NSLayoutXAxisAnchor,
+        constant: CGFloat
+    ) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return constraint(
+                equalTo: otherAnchor,
+                constant: constant
+            )
+        case .lessThanOrEqual:
+            return constraint(
+                lessThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
+        case .greaterThanOrEqual:
+            return constraint(
+                greaterThanOrEqualTo: otherAnchor,
+                constant: constant
+            )
+        }
+    }
+}
+
+extension NSLayoutDimension {
+    func constraint(
+        withRelation relation: Layout.Relation,
+        constant: CGFloat
+    ) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return constraint(equalToConstant: constant)
+        case .lessThanOrEqual:
+            return constraint(lessThanOrEqualToConstant: constant)
+        case .greaterThanOrEqual:
+            return constraint(greaterThanOrEqualToConstant: constant)
+        }
+    }
+
+    func constraint(
+        withRelation relation: Layout.Relation,
+        to otherAnchor: NSLayoutDimension,
+        multiplier: CGFloat,
+        constant: CGFloat
+    ) -> NSLayoutConstraint {
+        switch relation {
+        case .equal:
+            return constraint(
+                equalTo: otherAnchor,
+                multiplier: multiplier,
+                constant: constant
+            )
+        case .lessThanOrEqual:
+            return constraint(
+                lessThanOrEqualTo: otherAnchor,
+                multiplier: multiplier,
+                constant: constant
+            )
+        case .greaterThanOrEqual:
+            return constraint(
+                greaterThanOrEqualTo: otherAnchor,
+                multiplier: multiplier,
+                constant: constant
+            )
+        }
+    }
+}
+
