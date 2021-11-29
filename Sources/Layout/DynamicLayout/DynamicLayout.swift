@@ -9,7 +9,8 @@ import UIKit
 public final class DynamicLayout<State> {
     private let mainScope = Scope(.always)
 
-    private var activeConstraints: Set<NSLayoutConstraint> = []
+    @_spi(Testing)
+    public var activeConstraints: Set<NSLayoutConstraint> = []
 
     public init() {}
 
@@ -55,12 +56,6 @@ public extension DynamicLayout {
 public extension DynamicLayout.Predicate {
     init(_ closure: @escaping (State) -> Bool) {
         self.closure = closure
-    }
-
-    init(_ value: State) where State: Equatable {
-        self.init({ state in
-            state == value
-        })
     }
 
     internal static var always: Self {
@@ -141,12 +136,20 @@ public extension DynamicLayout.Configuration {
         when(predicate, whenBlock, otherwise: {})
     }
 
+    func when(_ predicate: @escaping (State) -> Bool, _ whenBlock: () -> Void, otherwise otherwiseBlock: () -> Void) where State: Equatable {
+        when(.init(predicate), whenBlock, otherwise: otherwiseBlock)
+    }
+
+    func when(_ predicate: @escaping (State) -> Bool, _ whenBlock: () -> Void) where State: Equatable {
+        when(.init(predicate), whenBlock)
+    }
+
     func when(_ value: State, _ whenBlock: () -> Void, otherwise otherwiseBlock: () -> Void) where State: Equatable {
-        when(.init(value), whenBlock, otherwise: otherwiseBlock)
+        when({ $0 == value }, whenBlock, otherwise: otherwiseBlock)
     }
 
     func when(_ value: State, _ whenBlock: () -> Void) where State: Equatable {
-        when(.init(value), whenBlock)
+        when({ $0 == value }, whenBlock)
     }
 }
 
