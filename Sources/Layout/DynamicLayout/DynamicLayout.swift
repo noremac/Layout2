@@ -23,24 +23,44 @@ public final class DynamicLayout<State> {
 
     public func update(state: State) {
         let contexts = mainScope.activeScopes(for: state)
-        let (newConstraints, actions) = contexts.reduce(into: (Set<NSLayoutConstraint>(), [(State) -> Void]())) { result, context in
+        let (newActiveConstraints, actions) = contexts.reduce(into: (Set<NSLayoutConstraint>(), [(State) -> Void]())) { result, context in
             result.0.formUnion(context.constraints)
             result.1 += context.actions
         }
-        let constraintsToActivate = newConstraints.reduce(into: [NSLayoutConstraint]()) { acc, newConstraint in
+        let constraintsToActivate = newActiveConstraints.reduce(into: [NSLayoutConstraint]()) { acc, newConstraint in
             if !activeConstraints.contains(newConstraint) {
                 acc.append(newConstraint)
             }
         }
         let constraintsToDeactivate = activeConstraints.reduce(into: [NSLayoutConstraint]()) { acc, oldConstraint in
-            if !newConstraints.contains(oldConstraint) {
+            if !newActiveConstraints.contains(oldConstraint) {
                 acc.append(oldConstraint)
             }
         }
         NSLayoutConstraint.deactivate(constraintsToDeactivate)
         NSLayoutConstraint.activate(constraintsToActivate)
-        activeConstraints = newConstraints
+        activeConstraints = newActiveConstraints
         actions.forEach { $0(state) }
+    }
+
+    @_spi(Testing)
+    public func constraintsHaveTheCorrectActivationState() -> Bool {
+        // TODO: Test this better somehow.
+        let allConstraints = mainScope.allConstraints()
+
+        for constraint in allConstraints {
+            if activeConstraints.contains(constraint) {
+                if !constraint.isActive {
+                    return false
+                }
+            } else {
+                if constraint.isActive {
+                    return false
+                }
+            }
+        }
+
+        return true
     }
 }
 
@@ -70,6 +90,10 @@ extension DynamicLayout {
 
         init(_ predicate: DynamicLayout.Predicate) {
             self.predicate = predicate
+        }
+
+        func allConstraints() -> [NSLayoutConstraint] {
+            constraints + children.flatMap({ $0.allConstraints() }) + (otherwise?.allConstraints() ?? [])
         }
     }
 }
