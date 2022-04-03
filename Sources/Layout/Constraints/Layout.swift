@@ -29,7 +29,7 @@ public extension Layout {
 
 public extension Layout {
     @inlinable
-    func addConstraints(_ newConstraints: [NSLayoutConstraint]) -> Layout {
+    func addConstraints<C>(_ newConstraints: C) -> Layout where C: Collection, C.Element == NSLayoutConstraint {
         var layout = self
         layout.lastAdditionStartIndex = constraints.endIndex
         layout.constraints.append(contentsOf: newConstraints)
@@ -38,10 +38,7 @@ public extension Layout {
 
     @inlinable
     func addConstraint(_ newConstraint: NSLayoutConstraint) -> Layout {
-        var layout = self
-        layout.lastAdditionStartIndex = constraints.endIndex
-        layout.constraints.append(newConstraint)
-        return layout
+        addConstraints(CollectionOfOne(newConstraint))
     }
 
     @inlinable
@@ -54,20 +51,16 @@ public extension Layout {
     #if canImport(UIKit)
     @inlinable
     func priority(_ priority: UILayoutPriority) -> Layout {
-        if let startIndex = lastAdditionStartIndex {
-            for constraint in constraints[startIndex...] {
-                constraint.priority = priority
-            }
+        modifyLastAddedConstraints { constraint in
+            constraint.priority = priority
         }
         return self
     }
     #elseif canImport(AppKit)
     @inlinable
     func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
-        if let startIndex = lastAdditionStartIndex {
-            for constraint in constraints[startIndex...] {
-                constraint.priority = priority
-            }
+        modifyLastAddedConstraints { constraint in
+            constraint.priority = priority
         }
         return self
     }
@@ -75,12 +68,19 @@ public extension Layout {
 
     @inlinable
     func identifier(_ identifier: String?) -> Layout {
-        if let startIndex = lastAdditionStartIndex {
-            for constraint in constraints[startIndex...] {
-                constraint.identifier = identifier
-            }
+        modifyLastAddedConstraints { constraint in
+            constraint.identifier = identifier
         }
         return self
+    }
+
+    @usableFromInline
+    internal func modifyLastAddedConstraints(_ modify: (NSLayoutConstraint) -> Void) {
+        if let startIndex = lastAdditionStartIndex {
+            for constraint in constraints[startIndex...] {
+                modify(constraint)
+            }
+        }
     }
 }
 
