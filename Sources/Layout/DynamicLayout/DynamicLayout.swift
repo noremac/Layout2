@@ -44,8 +44,9 @@ public final class DynamicLayout<State> {
     }
 
     @_spi(Testing)
-    public func constraintsHaveTheCorrectActivationState() -> Bool {
-        // TODO: Test this better somehow.
+    public func updateAndVerify(state: State) -> Bool {
+        update(state: state)
+
         let allConstraints = mainScope.allConstraints()
 
         for constraint in allConstraints {

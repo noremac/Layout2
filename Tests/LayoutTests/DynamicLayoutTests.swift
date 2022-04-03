@@ -62,12 +62,10 @@ final class DynamicLayoutTests: XCTestCase {
         }
 
         XCTAssertTrue(sut.activeConstraints.isEmpty)
-        sut.update(state: 0)
-        XCTAssertTrue(sut.constraintsHaveTheCorrectActivationState())
+        XCTAssertTrue(sut.updateAndVerify(state: 0))
         XCTAssertEqual(x, 1)
         AssertConstraintsEqual(sut.activeConstraints, layout.constraints)
-        sut.update(state: 0)
-        XCTAssertTrue(sut.constraintsHaveTheCorrectActivationState())
+        XCTAssertTrue(sut.updateAndVerify(state: 0))
         XCTAssertEqual(x, 2)
     }
 
@@ -97,13 +95,11 @@ final class DynamicLayoutTests: XCTestCase {
             }
         }
 
-        sut.update(state: 1)
-        XCTAssertTrue(sut.constraintsHaveTheCorrectActivationState())
+        XCTAssertTrue(sut.updateAndVerify(state: 1))
         AssertConstraintsEqual(sut.activeConstraints, b.constraints)
         XCTAssertEqual(x, 2)
 
-        sut.update(state: 10)
-        XCTAssertTrue(sut.constraintsHaveTheCorrectActivationState())
+        XCTAssertTrue(sut.updateAndVerify(state: 10))
         AssertConstraintsEqual(sut.activeConstraints, a.constraints)
         XCTAssertEqual(x, 10)
     }
@@ -136,18 +132,15 @@ final class DynamicLayoutTests: XCTestCase {
             }
         }
 
-        sut.update(state: 10)
-        XCTAssertTrue(sut.constraintsHaveTheCorrectActivationState())
+        XCTAssertTrue(sut.updateAndVerify(state: 10))
         AssertConstraintsEqual(sut.activeConstraints, a.constraints)
         XCTAssertEqual(x, 10)
 
-        sut.update(state: 100)
-        XCTAssertTrue(sut.constraintsHaveTheCorrectActivationState())
+        XCTAssertTrue(sut.updateAndVerify(state: 100))
         AssertConstraintsEqual(sut.activeConstraints, a.constraints + b.constraints)
         XCTAssertEqual(x, 101)
 
-        sut.update(state: 0)
-        XCTAssertTrue(sut.constraintsHaveTheCorrectActivationState())
+        XCTAssertTrue(sut.updateAndVerify(state: 0))
         XCTAssertTrue(sut.activeConstraints.isEmpty)
         XCTAssertEqual(x, 101)
     }
