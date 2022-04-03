@@ -23,26 +23,23 @@ public final class DynamicLayout<State> {
 
     public func update(state: State) {
         let contexts = mainScope.activeScopes(for: state)
-        let (newConstraints, actions) = contexts.reduce(into: ([NSLayoutConstraint](), [(State) -> Void]())) { result, context in
-            result.0 += context.constraints
+        let (newConstraints, actions) = contexts.reduce(into: (Set<NSLayoutConstraint>(), [(State) -> Void]())) { result, context in
+            result.0.formUnion(context.constraints)
             result.1 += context.actions
         }
-        let newSet = Set(newConstraints)
-        var constraintsToDeactivate = [NSLayoutConstraint]()
-        var constraintsToActivate = [NSLayoutConstraint]()
-        for newConstraint in newSet {
+        let constraintsToActivate = newConstraints.reduce(into: [NSLayoutConstraint]()) { acc, newConstraint in
             if !activeConstraints.contains(newConstraint) {
-                constraintsToActivate.append(newConstraint)
+                acc.append(newConstraint)
             }
         }
-        for oldConstraint in activeConstraints {
-            if !newSet.contains(oldConstraint) {
-                constraintsToDeactivate.append(oldConstraint)
+        let constraintsToDeactivate = activeConstraints.reduce(into: [NSLayoutConstraint]()) { acc, oldConstraint in
+            if !newConstraints.contains(oldConstraint) {
+                acc.append(oldConstraint)
             }
         }
         NSLayoutConstraint.deactivate(constraintsToDeactivate)
         NSLayoutConstraint.activate(constraintsToActivate)
-        activeConstraints = newSet
+        activeConstraints = newConstraints
         actions.forEach { $0(state) }
     }
 }
