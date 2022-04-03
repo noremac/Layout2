@@ -543,4 +543,20 @@ final class LayoutTests: XCTestCase {
         ]
         AssertConstraintsEqual(constraints, expected)
     }
+
+    func testPerformance() {
+        var count = 0
+        measure {
+            for _ in 0..<10000 {
+                count += view
+                    .layout
+                    .height(10)
+                    .aspectRatio(CGSize(width: 3, height: 2))
+                    .alignEdges()
+                    .constraints
+                    .count
+            }
+        }
+        XCTAssertEqual(count, 600000)
+    }
 }
