@@ -6,14 +6,15 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
-public final class Layout {
+public struct Layout {
     public var firstItem: LayoutContainer
 
-    public internal(set) var constraints: [NSLayoutConstraint] = []
+    public var constraints: [NSLayoutConstraint] = []
 
-    var _lastAddedConstraints: [NSLayoutConstraint] = []
+    @usableFromInline
+    var lastAdditionStartIndex: Int?
 
-    public init(_ firstItem: LayoutContainer) {
+    init(_ firstItem: LayoutContainer) {
         self.firstItem = firstItem
     }
 }
@@ -27,16 +28,23 @@ public extension Layout {
 }
 
 public extension Layout {
-    func addConstraints(_ constraints: [NSLayoutConstraint]) -> Layout {
-        self.constraints.append(contentsOf: constraints)
-        _lastAddedConstraints = constraints
-        return self
+    @inlinable
+    func addConstraints(_ newConstraints: [NSLayoutConstraint]) -> Layout {
+        var layout = self
+        layout.lastAdditionStartIndex = constraints.endIndex
+        layout.constraints.append(contentsOf: newConstraints)
+        return layout
     }
 
-    func addConstraint(_ constraint: NSLayoutConstraint) -> Layout {
-        addConstraints([constraint])
+    @inlinable
+    func addConstraint(_ newConstraint: NSLayoutConstraint) -> Layout {
+        var layout = self
+        layout.lastAdditionStartIndex = constraints.endIndex
+        layout.constraints.append(newConstraint)
+        return layout
     }
 
+    @inlinable
     @discardableResult
     func activate() -> [NSLayoutConstraint] {
         NSLayoutConstraint.activate(constraints)
@@ -44,30 +52,40 @@ public extension Layout {
     }
 
     #if canImport(UIKit)
+    @inlinable
     func priority(_ priority: UILayoutPriority) -> Layout {
-        _lastAddedConstraints.forEach { constraint in
-            constraint.priority = priority
+        if let startIndex = lastAdditionStartIndex {
+            for constraint in constraints[startIndex...] {
+                constraint.priority = priority
+            }
         }
         return self
     }
     #elseif canImport(AppKit)
+    @inlinable
     func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
-        _lastAddedConstraints.forEach { constraint in
-            constraint.priority = priority
+        if let startIndex = lastAdditionStartIndex {
+            for constraint in constraints[startIndex...] {
+                constraint.priority = priority
+            }
         }
         return self
     }
     #endif
 
+    @inlinable
     func identifier(_ identifier: String?) -> Layout {
-        _lastAddedConstraints.forEach { constraint in
-            constraint.identifier = identifier
+        if let startIndex = lastAdditionStartIndex {
+            for constraint in constraints[startIndex...] {
+                constraint.identifier = identifier
+            }
         }
         return self
     }
 }
 
 public extension Layout {
+    @inlinable
     func top(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -84,6 +102,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func leading(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -100,6 +119,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func bottom(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -116,6 +136,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func trailing(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -132,6 +153,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func alignEdges(
         _ edges: NSDirectionalRectEdge = .all,
         to secondItem: LayoutContainer? = nil,
@@ -144,8 +166,7 @@ public extension Layout {
                 firstItem
                     .topAnchor
                     .constraint(
-                        withRelation: .equal,
-                        to: (secondItem ?? firstItem.parentContainer).topAnchor,
+                        equalTo: (secondItem ?? firstItem.parentContainer).topAnchor,
                         constant: insets.top
                     )
             )
@@ -156,8 +177,7 @@ public extension Layout {
                 firstItem
                     .leadingAnchor
                     .constraint(
-                        withRelation: .equal,
-                        to: (secondItem ?? firstItem.parentContainer).leadingAnchor,
+                        equalTo: (secondItem ?? firstItem.parentContainer).leadingAnchor,
                         constant: insets.leading
                     )
             )
@@ -168,8 +188,7 @@ public extension Layout {
                 firstItem
                     .bottomAnchor
                     .constraint(
-                        withRelation: .equal,
-                        to: (secondItem ?? firstItem.parentContainer).bottomAnchor,
+                        equalTo: (secondItem ?? firstItem.parentContainer).bottomAnchor,
                         constant: -insets.bottom
                     )
             )
@@ -180,8 +199,7 @@ public extension Layout {
                 firstItem
                     .trailingAnchor
                     .constraint(
-                        withRelation: .equal,
-                        to: (secondItem ?? firstItem.parentContainer).trailingAnchor,
+                        equalTo: (secondItem ?? firstItem.parentContainer).trailingAnchor,
                         constant: -insets.trailing
                     )
             )
@@ -190,6 +208,7 @@ public extension Layout {
         return addConstraints(constraints)
     }
 
+    @inlinable
     func containEdges(
         _ edges: NSDirectionalRectEdge,
         within secondItem: LayoutContainer? = nil,
@@ -248,6 +267,7 @@ public extension Layout {
         return addConstraints(constraints)
     }
 
+    @inlinable
     func centerX(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -264,6 +284,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func centerY(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -280,6 +301,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func center(
         within secondItem: LayoutContainer? = nil
     ) -> Layout {
@@ -297,6 +319,7 @@ public extension Layout {
         ])
     }
 
+    @inlinable
     func matchWidth(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
@@ -315,6 +338,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func width(
         _ relation: Relation,
         to constant: CGFloat
@@ -322,12 +346,14 @@ public extension Layout {
         addConstraint(firstItem.widthAnchor.constraint(withRelation: relation, constant: constant))
     }
 
+    @inlinable
     func width(
         _ constant: CGFloat
     ) -> Layout {
         width(.equal, to: constant)
     }
 
+    @inlinable
     func matchHeight(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
@@ -346,6 +372,7 @@ public extension Layout {
         )
     }
 
+    @inlinable
     func height(
         _ relation: Relation,
         to constant: CGFloat
@@ -353,12 +380,14 @@ public extension Layout {
         addConstraint(firstItem.heightAnchor.constraint(withRelation: relation, constant: constant))
     }
 
+    @inlinable
     func height(
         _ constant: CGFloat
     ) -> Layout {
         height(.equal, to: constant)
     }
 
+    @inlinable
     func size(
         _ relation: Relation,
         to size: CGSize
@@ -369,12 +398,14 @@ public extension Layout {
         ])
     }
 
+    @inlinable
     func size(
         _ size: CGSize
     ) -> Layout {
         self.size(.equal, to: size)
     }
 
+    @inlinable
     func matchSize(
         _ relation: Relation = .equal,
         to secondItem: LayoutContainer? = nil,
@@ -400,12 +431,14 @@ public extension Layout {
         ])
     }
 
+    @inlinable
     func aspectRatio(
         _ size: CGSize
     ) -> Layout {
         aspectRatio(size.width / size.height)
     }
 
+    @inlinable
     func aspectRatio(
         _ ratio: CGFloat
     ) -> Layout {
@@ -414,6 +447,7 @@ public extension Layout {
 }
 
 extension NSLayoutYAxisAnchor {
+    @usableFromInline
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutYAxisAnchor,
@@ -440,6 +474,7 @@ extension NSLayoutYAxisAnchor {
 }
 
 extension NSLayoutXAxisAnchor {
+    @usableFromInline
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutXAxisAnchor,
@@ -466,6 +501,7 @@ extension NSLayoutXAxisAnchor {
 }
 
 extension NSLayoutDimension {
+    @usableFromInline
     func constraint(
         withRelation relation: Layout.Relation,
         constant: CGFloat
@@ -480,6 +516,7 @@ extension NSLayoutDimension {
         }
     }
 
+    @usableFromInline
     func constraint(
         withRelation relation: Layout.Relation,
         to otherAnchor: NSLayoutDimension,
