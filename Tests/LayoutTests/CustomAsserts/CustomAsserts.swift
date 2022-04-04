@@ -22,7 +22,6 @@ private struct EquatableConstraintWrapper: Equatable {
             && lc.constant == rc.constant
             && lc.multiplier == rc.multiplier
             && lc.priority == rc.priority
-            && lc.identifier == rc.identifier
             && lc.isActive == rc.isActive
     }
 }

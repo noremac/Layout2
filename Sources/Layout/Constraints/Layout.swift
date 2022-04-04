@@ -1,11 +1,9 @@
 #if canImport(AppKit)
 import AppKit
-@usableFromInline
-typealias _LayoutPriority = NSLayoutConstraint.Priority
+public typealias _LayoutPriority = NSLayoutConstraint.Priority
 #elseif canImport(UIKit)
 import UIKit
-@usableFromInline
-typealias _LayoutPriority = UILayoutPriority
+public typealias _LayoutPriority = UILayoutPriority
 #else
 #error("Unsupported platform")
 #endif
@@ -14,9 +12,6 @@ public struct Layout {
     public var firstItem: LayoutContainer
 
     public var constraints: [NSLayoutConstraint] = []
-
-    @usableFromInline
-    var lastAdditionStartIndex: Int?
 
     init(_ firstItem: LayoutContainer) {
         self.firstItem = firstItem
@@ -33,16 +28,42 @@ public extension Layout {
 
 public extension Layout {
     @inlinable
-    func addConstraints<C>(_ newConstraints: C) -> Layout where C: Collection, C.Element == NSLayoutConstraint {
+    func addConstraints<C>(
+        _ newConstraints: C,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
+    ) -> Layout where C: Collection, C.Element == NSLayoutConstraint {
         var layout = self
-        layout.lastAdditionStartIndex = constraints.endIndex
+        let startIndex = layout.constraints.endIndex
         layout.constraints.append(contentsOf: newConstraints)
+
+        lazy var actualIdentifier = identifier ?? "\((file as NSString).lastPathComponent):\(line)"
+        for constraint in layout.constraints[startIndex...] {
+            if let priority = priority {
+                constraint.priority = priority
+            }
+            constraint.identifier = actualIdentifier
+        }
         return layout
     }
 
     @inlinable
-    func addConstraint(_ newConstraint: NSLayoutConstraint) -> Layout {
-        addConstraints(CollectionOfOne(newConstraint))
+    func addConstraint(
+        _ newConstraint: NSLayoutConstraint,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
+    ) -> Layout {
+        addConstraints(
+            CollectionOfOne(newConstraint),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
@@ -51,44 +72,6 @@ public extension Layout {
         NSLayoutConstraint.activate(constraints)
         return constraints
     }
-
-    #if canImport(UIKit)
-    @inlinable
-    func priority(_ priority: UILayoutPriority) -> Layout {
-        _priority(priority)
-    }
-
-    #elseif canImport(AppKit)
-    @inlinable
-    func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
-        _priority(priority)
-    }
-    #endif
-
-    @usableFromInline
-    internal func _priority(_ priority: _LayoutPriority) -> Self {
-        _modifyLastAddedConstraints { constraint in
-            constraint.priority = priority
-        }
-        return self
-    }
-
-    @inlinable
-    func identifier(_ identifier: String?) -> Layout {
-        _modifyLastAddedConstraints { constraint in
-            constraint.identifier = identifier
-        }
-        return self
-    }
-
-    @usableFromInline
-    internal func _modifyLastAddedConstraints(_ modify: (NSLayoutConstraint) -> Void) {
-        if let startIndex = lastAdditionStartIndex {
-            for constraint in constraints[startIndex...] {
-                modify(constraint)
-            }
-        }
-    }
 }
 
 public extension Layout {
@@ -96,7 +79,11 @@ public extension Layout {
     func top(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -105,7 +92,11 @@ public extension Layout {
                     withRelation: relation,
                     to: anchor ?? firstItem.parentContainer.topAnchor,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
@@ -113,7 +104,11 @@ public extension Layout {
     func leading(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -122,7 +117,11 @@ public extension Layout {
                     withRelation: relation,
                     to: anchor ?? firstItem.parentContainer.leadingAnchor,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
@@ -130,7 +129,11 @@ public extension Layout {
     func bottom(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -139,7 +142,11 @@ public extension Layout {
                     withRelation: relation,
                     to: anchor ?? firstItem.parentContainer.bottomAnchor,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
@@ -147,7 +154,11 @@ public extension Layout {
     func trailing(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -156,7 +167,11 @@ public extension Layout {
                     withRelation: relation,
                     to: anchor ?? firstItem.parentContainer.trailingAnchor,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
@@ -164,7 +179,10 @@ public extension Layout {
     func alignEdges(
         _ edges: NSDirectionalRectEdge = .all,
         to secondItem: LayoutContainer? = nil,
-        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0),
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         var constraints = [NSLayoutConstraint]()
 
@@ -212,14 +230,23 @@ public extension Layout {
             )
         }
 
-        return addConstraints(constraints)
+        return addConstraints(
+            constraints,
+            priority: nil,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func containEdges(
         _ edges: NSDirectionalRectEdge,
         within secondItem: LayoutContainer? = nil,
-        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+        insets: NSDirectionalEdgeInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0),
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         var constraints = [NSLayoutConstraint]()
 
@@ -271,14 +298,24 @@ public extension Layout {
             )
         }
 
-        return addConstraints(constraints)
+        return addConstraints(
+            constraints,
+            priority: nil,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func centerX(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -287,7 +324,11 @@ public extension Layout {
                     withRelation: relation,
                     to: anchor ?? firstItem.parentContainer.centerXAnchor,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
@@ -295,7 +336,11 @@ public extension Layout {
     func centerY(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -304,26 +349,39 @@ public extension Layout {
                     withRelation: relation,
                     to: anchor ?? firstItem.parentContainer.centerYAnchor,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
     @inlinable
     func center(
-        within secondItem: LayoutContainer? = nil
+        within secondItem: LayoutContainer? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        addConstraints([
-            firstItem
-                .centerXAnchor
-                .constraint(
-                    equalTo: (secondItem ?? firstItem.parentContainer).centerXAnchor
-                ),
-            firstItem
-                .centerYAnchor
-                .constraint(
-                    equalTo: (secondItem ?? firstItem.parentContainer).centerYAnchor
-                ),
-        ])
+        addConstraints(
+            [
+                firstItem
+                    .centerXAnchor
+                    .constraint(
+                        equalTo: (secondItem ?? firstItem.parentContainer).centerXAnchor
+                    ),
+                firstItem
+                    .centerYAnchor
+                    .constraint(
+                        equalTo: (secondItem ?? firstItem.parentContainer).centerYAnchor
+                    ),
+            ],
+            priority: nil,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
@@ -331,7 +389,11 @@ public extension Layout {
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
         multiplier: CGFloat = 1,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -341,23 +403,48 @@ public extension Layout {
                     to: secondItem ?? firstItem.parentContainer.widthAnchor,
                     multiplier: multiplier,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
     @inlinable
     func width(
         _ relation: Relation,
-        to constant: CGFloat
+        to constant: CGFloat,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        addConstraint(firstItem.widthAnchor.constraint(withRelation: relation, constant: constant))
+        addConstraint(
+            firstItem.widthAnchor.constraint(withRelation: relation, constant: constant),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func width(
-        _ constant: CGFloat
+        _ constant: CGFloat,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        width(.equal, to: constant)
+        width(
+            .equal,
+            to: constant,
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
@@ -365,7 +452,11 @@ public extension Layout {
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
         multiplier: CGFloat = 1,
-        constant: CGFloat = 0
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         addConstraint(
             firstItem
@@ -375,39 +466,76 @@ public extension Layout {
                     to: secondItem ?? firstItem.parentContainer.heightAnchor,
                     multiplier: multiplier,
                     constant: constant
-                )
+                ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
         )
     }
 
     @inlinable
     func height(
         _ relation: Relation,
-        to constant: CGFloat
+        to constant: CGFloat,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        addConstraint(firstItem.heightAnchor.constraint(withRelation: relation, constant: constant))
+        addConstraint(
+            firstItem.heightAnchor.constraint(withRelation: relation, constant: constant),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func height(
-        _ constant: CGFloat
+        _ constant: CGFloat,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        height(.equal, to: constant)
+        height(
+            .equal,
+            to: constant,
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func size(
         _ relation: Relation,
-        to size: CGSize
+        to size: CGSize,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        addConstraints([
-            firstItem.widthAnchor.constraint(withRelation: relation, constant: size.width),
-            firstItem.heightAnchor.constraint(withRelation: relation, constant: size.height),
-        ])
+        addConstraints(
+            [
+                firstItem.widthAnchor.constraint(withRelation: relation, constant: size.width),
+                firstItem.heightAnchor.constraint(withRelation: relation, constant: size.height),
+            ],
+            priority: nil,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func size(
-        _ size: CGSize
+        _ size: CGSize,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
         self.size(.equal, to: size)
     }
@@ -416,40 +544,71 @@ public extension Layout {
     func matchSize(
         _ relation: Relation = .equal,
         to secondItem: LayoutContainer? = nil,
-        multiplier: CGFloat = 1
+        multiplier: CGFloat = 1,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        addConstraints([
-            firstItem
-                .widthAnchor
-                .constraint(
-                    withRelation: relation,
-                    to: (secondItem ?? firstItem.parentContainer).widthAnchor,
-                    multiplier: multiplier,
-                    constant: 0
-                ),
-            firstItem
-                .heightAnchor
-                .constraint(
-                    withRelation: relation,
-                    to: (secondItem ?? firstItem.parentContainer).heightAnchor,
-                    multiplier: multiplier,
-                    constant: 0
-                ),
-        ])
+        addConstraints(
+            [
+                firstItem
+                    .widthAnchor
+                    .constraint(
+                        withRelation: relation,
+                        to: (secondItem ?? firstItem.parentContainer).widthAnchor,
+                        multiplier: multiplier,
+                        constant: 0
+                    ),
+                firstItem
+                    .heightAnchor
+                    .constraint(
+                        withRelation: relation,
+                        to: (secondItem ?? firstItem.parentContainer).heightAnchor,
+                        multiplier: multiplier,
+                        constant: 0
+                    ),
+            ],
+            priority: nil,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func aspectRatio(
-        _ size: CGSize
+        _ size: CGSize,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        aspectRatio(size.width / size.height)
+        aspectRatio(
+            size.width / size.height,
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 
     @inlinable
     func aspectRatio(
-        _ ratio: CGFloat
+        _ ratio: CGFloat,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
     ) -> Layout {
-        matchWidth(.equal, to: firstItem.heightAnchor, multiplier: ratio)
+        matchWidth(
+            .equal,
+            to: firstItem.heightAnchor,
+            multiplier: ratio,
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
     }
 }
 

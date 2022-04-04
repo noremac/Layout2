@@ -29,13 +29,11 @@ final class LayoutTests: XCTestCase {
     func testPriority() {
         let constraints = view
             .layout
-            .top()
-            .bottom().priority(.defaultHigh)
+            .bottom(priority: .defaultHigh)
             .constraints
         let bottom = view.bottomAnchor.constraint(equalTo: parent.bottomAnchor)
         bottom.priority = .defaultHigh
         let expected = [
-            view.topAnchor.constraint(equalTo: parent.topAnchor),
             bottom,
         ]
         AssertConstraintsEqual(constraints, expected)
@@ -44,16 +42,9 @@ final class LayoutTests: XCTestCase {
     func testIdentifier() {
         let constraints = view
             .layout
-            .top()
-            .bottom().identifier("1")
+            .bottom(identifier: "1")
             .constraints
-        let bottom = view.bottomAnchor.constraint(equalTo: parent.bottomAnchor)
-        bottom.identifier = "1"
-        let expected = [
-            view.topAnchor.constraint(equalTo: parent.topAnchor),
-            bottom,
-        ]
-        AssertConstraintsEqual(constraints, expected)
+        XCTAssertEqual(constraints.map(\.identifier), ["1"])
     }
 
     func testActivate() {
