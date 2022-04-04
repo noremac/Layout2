@@ -543,6 +543,6 @@ final class LayoutTests: XCTestCase {
                     .count
             }
         }
-        XCTAssertEqual(count, 600000)
+        XCTAssertEqual(count, 600_000)
     }
 }

@@ -15,15 +15,15 @@ private struct EquatableConstraintWrapper: Equatable {
         let lc = lhs.constraint
         let rc = rhs.constraint
         return lc.firstItem === rc.firstItem
-        && lc.firstAttribute == rc.firstAttribute
-        && lc.relation == rc.relation
-        && lc.secondItem ===  rc.secondItem
-        && lc.secondAttribute == rc.secondAttribute
-        && lc.constant == rc.constant
-        && lc.multiplier == rc.multiplier
-        && lc.priority == rc.priority
-        && lc.identifier == rc.identifier
-        && lc.isActive == rc.isActive
+            && lc.firstAttribute == rc.firstAttribute
+            && lc.relation == rc.relation
+            && lc.secondItem === rc.secondItem
+            && lc.secondAttribute == rc.secondAttribute
+            && lc.constant == rc.constant
+            && lc.multiplier == rc.multiplier
+            && lc.priority == rc.priority
+            && lc.identifier == rc.identifier
+            && lc.isActive == rc.isActive
     }
 }
 

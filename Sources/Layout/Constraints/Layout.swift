@@ -57,6 +57,7 @@ public extension Layout {
     func priority(_ priority: UILayoutPriority) -> Layout {
         _priority(priority)
     }
+
     #elseif canImport(AppKit)
     @inlinable
     func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
@@ -551,4 +552,3 @@ extension NSLayoutDimension {
         }
     }
 }
-
