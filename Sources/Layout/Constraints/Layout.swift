@@ -1,7 +1,11 @@
 #if canImport(AppKit)
 import AppKit
+@usableFromInline
+typealias _LayoutPriority = NSLayoutConstraint.Priority
 #elseif canImport(UIKit)
 import UIKit
+@usableFromInline
+typealias _LayoutPriority = UILayoutPriority
 #else
 #error("Unsupported platform")
 #endif
@@ -51,20 +55,22 @@ public extension Layout {
     #if canImport(UIKit)
     @inlinable
     func priority(_ priority: UILayoutPriority) -> Layout {
-        modifyLastAddedConstraints { constraint in
-            constraint.priority = priority
-        }
-        return self
+        _priority(priority)
     }
     #elseif canImport(AppKit)
     @inlinable
     func priority(_ priority: NSLayoutConstraint.Priority) -> Layout {
+        _priority(priority)
+    }
+    #endif
+
+    @usableFromInline
+    internal func _priority(_ priority: _LayoutPriority) -> Self {
         modifyLastAddedConstraints { constraint in
             constraint.priority = priority
         }
         return self
     }
-    #endif
 
     @inlinable
     func identifier(_ identifier: String?) -> Layout {

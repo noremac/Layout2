@@ -10,35 +10,19 @@ import UIKit
 #endif
 
 final class DynamicLayoutTests: XCTestCase {
-    #if canImport(UIKit)
-    lazy var parent = UIView()
+    lazy var parent = _View()
 
-    lazy var view: UIView = {
-        let view = UIView()
+    lazy var view: _View = {
+        let view = _View()
         parent.addSubview(view)
         return view
     }()
 
-    lazy var otherView: UIView = {
-        let view = UIView()
+    lazy var otherView: _View = {
+        let view = _View()
         parent.addSubview(view)
         return view
     }()
-    #elseif canImport(AppKit)
-    lazy var parent = NSView()
-
-    lazy var view: NSView = {
-        let view = NSView()
-        parent.addSubview(view)
-        return view
-    }()
-
-    lazy var otherView: NSView = {
-        let view = NSView()
-        parent.addSubview(view)
-        return view
-    }()
-    #endif
 
     private var sut: DynamicLayout<Int>!
 
