@@ -66,7 +66,7 @@ public extension Layout {
 
     @usableFromInline
     internal func _priority(_ priority: _LayoutPriority) -> Self {
-        modifyLastAddedConstraints { constraint in
+        _modifyLastAddedConstraints { constraint in
             constraint.priority = priority
         }
         return self
@@ -74,14 +74,14 @@ public extension Layout {
 
     @inlinable
     func identifier(_ identifier: String?) -> Layout {
-        modifyLastAddedConstraints { constraint in
+        _modifyLastAddedConstraints { constraint in
             constraint.identifier = identifier
         }
         return self
     }
 
     @usableFromInline
-    internal func modifyLastAddedConstraints(_ modify: (NSLayoutConstraint) -> Void) {
+    internal func _modifyLastAddedConstraints(_ modify: (NSLayoutConstraint) -> Void) {
         if let startIndex = lastAdditionStartIndex {
             for constraint in constraints[startIndex...] {
                 modify(constraint)
