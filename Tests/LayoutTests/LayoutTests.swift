@@ -11,6 +11,7 @@ typealias _View = UIView
 #error("Unsupported platform")
 #endif
 
+@MainActor
 final class LayoutTests: XCTestCase {
     lazy var parent = _View()
 
@@ -366,7 +367,7 @@ final class LayoutTests: XCTestCase {
     func testMatchWidthDefault() {
         let constraints = view
             .layout
-            .matchWidth()
+            .width()
             .constraints
         let expected = [
             view.widthAnchor.constraint(equalTo: parent.widthAnchor),
@@ -377,7 +378,7 @@ final class LayoutTests: XCTestCase {
     func testMatchWidthCustom() {
         let constraints = view
             .layout
-            .matchWidth(.greaterThanOrEqual, to: otherView.heightAnchor, multiplier: 2, constant: 3)
+            .width(.greaterThanOrEqual, to: otherView.heightAnchor, multiplier: 2, constant: 3)
             .constraints
         let expected = [
             view.widthAnchor.constraint(greaterThanOrEqualTo: otherView.heightAnchor, multiplier: 2, constant: 3),
@@ -388,7 +389,7 @@ final class LayoutTests: XCTestCase {
     func testMatchHeightDefault() {
         let constraints = view
             .layout
-            .matchHeight()
+            .height()
             .constraints
         let expected = [
             view.heightAnchor.constraint(equalTo: parent.heightAnchor),
@@ -399,7 +400,7 @@ final class LayoutTests: XCTestCase {
     func testMatchHeightCustom() {
         let constraints = view
             .layout
-            .matchHeight(.lessThanOrEqual, to: otherView.widthAnchor, multiplier: 2, constant: 3)
+            .height(.lessThanOrEqual, to: otherView.widthAnchor, multiplier: 2, constant: 3)
             .constraints
         let expected = [
             view.heightAnchor.constraint(lessThanOrEqualTo: otherView.widthAnchor, multiplier: 2, constant: 3),

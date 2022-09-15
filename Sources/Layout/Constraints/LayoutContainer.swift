@@ -1,11 +1,4 @@
-#if canImport(AppKit)
-import AppKit
-#elseif canImport(UIKit)
-import UIKit
-#else
-#error("Unsupported platform")
-#endif
-
+@MainActor
 public protocol LayoutContainer {
     var layout: Layout { get }
 
@@ -65,8 +58,9 @@ extension UILayoutGuide: LayoutContainer {
         bottomAnchor
     }
 }
+#endif
 
-#elseif canImport(AppKit)
+#if canImport(AppKit)
 extension NSView: LayoutContainer {
     public var layout: Layout {
         translatesAutoresizingMaskIntoConstraints = false

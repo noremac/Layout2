@@ -1,11 +1,4 @@
-#if canImport(AppKit)
-import AppKit
-#elseif canImport(UIKit)
-import UIKit
-#else
-#error("Unsupported platform")
-#endif
-
+@MainActor
 public final class DynamicLayout<State> {
     private let mainScope = Scope(.always)
 
@@ -188,26 +181,7 @@ public extension DynamicLayout.Configuration {
 }
 
 public extension DynamicLayout.Configuration {
-    func constraints(@DynamicLayoutConstraintBuilder _ constraints: () -> [NSLayoutConstraint]) {
+    func constraints(@ConstraintBuilder _ constraints: () -> [NSLayoutConstraint]) {
         currentScope.constraints += constraints()
-    }
-}
-
-@resultBuilder
-public enum DynamicLayoutConstraintBuilder {
-    public static func buildExpression(_ expression: NSLayoutConstraint) -> [NSLayoutConstraint] {
-        [expression]
-    }
-
-    public static func buildExpression(_ expression: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
-        expression
-    }
-
-    public static func buildExpression(_ expression: Layout) -> [NSLayoutConstraint] {
-        expression.constraints
-    }
-
-    public static func buildBlock(_ components: [NSLayoutConstraint]...) -> [NSLayoutConstraint] {
-        components.flatMap({ $0 })
     }
 }

@@ -1,13 +1,14 @@
 #if canImport(AppKit)
-import AppKit
+@_exported import AppKit
 public typealias _LayoutPriority = NSLayoutConstraint.Priority
 #elseif canImport(UIKit)
-import UIKit
+@_exported import UIKit
 public typealias _LayoutPriority = UILayoutPriority
 #else
 #error("Unsupported platform")
 #endif
 
+@MainActor
 public struct Layout {
     public var firstItem: LayoutContainer
 
@@ -72,9 +73,7 @@ public extension Layout {
         NSLayoutConstraint.activate(constraints)
         return constraints
     }
-}
 
-public extension Layout {
     @inlinable
     func top(
         _ relation: Relation = .equal,
@@ -93,6 +92,27 @@ public extension Layout {
                     to: anchor ?? firstItem.parentContainer.topAnchor,
                     constant: constant
                 ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
+    }
+
+    @inlinable
+    func top(
+        _ relation: Relation = .equal,
+        to anchor: LayoutContainer,
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
+    ) -> Layout {
+        top(
+            relation,
+            to: anchor.topAnchor,
+            constant: constant,
             priority: priority,
             identifier: identifier,
             file: file,
@@ -126,6 +146,27 @@ public extension Layout {
     }
 
     @inlinable
+    func leading(
+        _ relation: Relation = .equal,
+        to anchor: LayoutContainer,
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
+    ) -> Layout {
+        leading(
+            relation,
+            to: anchor.leadingAnchor,
+            constant: constant,
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
+    }
+
+    @inlinable
     func bottom(
         _ relation: Relation = .equal,
         to anchor: NSLayoutYAxisAnchor? = nil,
@@ -151,6 +192,27 @@ public extension Layout {
     }
 
     @inlinable
+    func bottom(
+        _ relation: Relation = .equal,
+        to anchor: LayoutContainer,
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
+    ) -> Layout {
+        bottom(
+            relation,
+            to: anchor.bottomAnchor,
+            constant: constant,
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
+    }
+
+    @inlinable
     func trailing(
         _ relation: Relation = .equal,
         to anchor: NSLayoutXAxisAnchor? = nil,
@@ -168,6 +230,27 @@ public extension Layout {
                     to: anchor ?? firstItem.parentContainer.trailingAnchor,
                     constant: constant
                 ),
+            priority: priority,
+            identifier: identifier,
+            file: file,
+            line: line
+        )
+    }
+
+    @inlinable
+    func trailing(
+        _ relation: Relation = .equal,
+        to anchor: LayoutContainer,
+        constant: CGFloat = 0,
+        priority: _LayoutPriority? = nil,
+        identifier: String? = nil,
+        file: String = #file,
+        line: UInt = #line
+    ) -> Layout {
+        trailing(
+            relation,
+            to: anchor.trailingAnchor,
+            constant: constant,
             priority: priority,
             identifier: identifier,
             file: file,
@@ -385,7 +468,7 @@ public extension Layout {
     }
 
     @inlinable
-    func matchWidth(
+    func width(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
         multiplier: CGFloat = 1,
@@ -448,7 +531,7 @@ public extension Layout {
     }
 
     @inlinable
-    func matchHeight(
+    func height(
         _ relation: Relation = .equal,
         to secondItem: NSLayoutDimension? = nil,
         multiplier: CGFloat = 1,
@@ -600,7 +683,7 @@ public extension Layout {
         file: String = #file,
         line: UInt = #line
     ) -> Layout {
-        matchWidth(
+        width(
             .equal,
             to: firstItem.heightAnchor,
             multiplier: ratio,

@@ -9,6 +9,7 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
+@MainActor
 final class DynamicLayoutTests: XCTestCase {
     lazy var parent = _View()
 
