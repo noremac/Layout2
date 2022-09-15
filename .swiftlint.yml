@@ -56,6 +56,4 @@ opt_in_rules:
   - unneeded_parentheses_in_closure_argument
 
 excluded:
-  - Scripts
-  - ios-lint
   - .build
