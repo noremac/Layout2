@@ -14,4 +14,8 @@ public enum ConstraintBuilder {
   public static func buildBlock(_ components: Component...) -> Component {
     components.flatMap({ $0 })
   }
+
+  public static func buildArray(_ components: [Component]) -> Component {
+    components.flatMap({ $0 })
+  }
 }
