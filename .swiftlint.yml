@@ -1,5 +1,5 @@
 disabled_rules:
-  - attributes
+  - cyclomatic_complexity
   - file_length
   - for_where
   - force_cast
@@ -12,13 +12,13 @@ disabled_rules:
   - nesting
   - opening_brace
   - prohibited_interface_builder
+  - single_test_class
   - trailing_comma
   - type_body_length
   - type_name
 
 opt_in_rules:
   - anyobject_protocol
-  - attributes
   - closure_end_indentation
   - closure_spacing
   - collection_alignment
@@ -35,7 +35,6 @@ opt_in_rules:
   - joined_default_parameter
   - legacy_random
   - lower_acl_than_parent
-  # - missing_docs
   - modifier_order
   - multiline_literal_brackets
   - multiline_parameters
@@ -50,6 +49,7 @@ opt_in_rules:
   - sorted_first_last
   - sorted_imports
   - static_operator
+  - superfluous_disable_command
   - switch_case_on_newline
   - toggle_bool
   - unavailable_function
@@ -57,3 +57,4 @@ opt_in_rules:
 
 excluded:
   - .build
+  - Scripts
