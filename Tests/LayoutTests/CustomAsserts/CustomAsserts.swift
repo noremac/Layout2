@@ -8,10 +8,11 @@ import UIKit
 
 import XCTest
 
-private struct EquatableConstraintWrapper: Equatable {
+@MainActor
+private struct EquatableConstraintWrapper {
   let constraint: NSLayoutConstraint
 
-  static func == (lhs: Self, rhs: Self) -> Bool {
+  static func equal(_ lhs: Self, _ rhs: Self) -> Bool {
     let lc = lhs.constraint
     let rc = rhs.constraint
     return lc.firstItem === rc.firstItem
@@ -26,6 +27,7 @@ private struct EquatableConstraintWrapper: Equatable {
   }
 }
 
+@MainActor
 func AssertConstraintsEqual(
   _ c1: some Collection<NSLayoutConstraint>,
   _ c2: some Collection<NSLayoutConstraint>,
@@ -42,7 +44,21 @@ func AssertConstraintsEqual(
   let m1 = c1.map(EquatableConstraintWrapper.init(constraint:))
   let m2 = c2.map(EquatableConstraintWrapper.init(constraint:))
 
-  if !m1.allSatisfy(m2.contains(_:)) {
-    fail()
+  let equal = m1.allSatisfy { c1 in
+    for c2 in m2 {
+      if EquatableConstraintWrapper.equal(c2, c2) {
+        return true
+      }
+    }
+
+    return false
   }
+
+  guard equal else {
+    return fail()
+  }
+//
+//  if !m1.allSatisfy(m2.contains(_:)) {
+//    fail()
+//  }
 }
