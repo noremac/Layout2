@@ -136,3 +136,23 @@ extension DynamicLayout.Predicate where State: Comparable {
     .init({ $0 >= value })
   }
 }
+
+extension DynamicLayout {
+  func updateAndVerify(state: State) -> Bool {
+    update(state: state)
+
+    for constraint in allConstraints {
+      if activeConstraints.contains(constraint) {
+        if !constraint.isActive {
+          return false
+        }
+      } else {
+        if constraint.isActive {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+}

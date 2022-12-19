@@ -5,6 +5,11 @@ public final class DynamicLayout<State> {
   @_spi(Testing)
   public var activeConstraints: Set<NSLayoutConstraint> = []
 
+  @_spi(Testing)
+  public var allConstraints: [NSLayoutConstraint] {
+    mainScope.allConstraints()
+  }
+
   public init() {}
 
   public func configure(file: StaticString = #file, line: UInt = #line, _ configure: (Configuration) -> Void) {
@@ -34,27 +39,6 @@ public final class DynamicLayout<State> {
     NSLayoutConstraint.activate(constraintsToActivate)
     activeConstraints = newActiveConstraints
     actions.forEach { $0(state) }
-  }
-
-  @_spi(Testing)
-  public func updateAndVerify(state: State) -> Bool {
-    update(state: state)
-
-    let allConstraints = mainScope.allConstraints()
-
-    for constraint in allConstraints {
-      if activeConstraints.contains(constraint) {
-        if !constraint.isActive {
-          return false
-        }
-      } else {
-        if constraint.isActive {
-          return false
-        }
-      }
-    }
-
-    return true
   }
 }
 
