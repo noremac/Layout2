@@ -4,8 +4,8 @@
 # rules
 
 --disable trailingClosures
+--enable blankLineAfterImports
 --enable blankLinesBetweenScopes
---enable preferDouble
 --enable wrapEnumCases
 --enable wrapSwitchCases
 

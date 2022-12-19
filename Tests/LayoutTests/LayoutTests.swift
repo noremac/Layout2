@@ -3,9 +3,11 @@ import XCTest
 
 #if canImport(AppKit)
 import AppKit
+
 typealias _View = NSView
 #elseif canImport(UIKit)
 import UIKit
+
 typealias _View = UIView
 #else
 #error("Unsupported platform")

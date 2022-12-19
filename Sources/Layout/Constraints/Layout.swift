@@ -1,8 +1,10 @@
 #if canImport(AppKit)
 @_exported import AppKit
+
 public typealias _LayoutPriority = NSLayoutConstraint.Priority
 #elseif canImport(UIKit)
 @_exported import UIKit
+
 public typealias _LayoutPriority = UILayoutPriority
 #else
 #error("Unsupported platform")
