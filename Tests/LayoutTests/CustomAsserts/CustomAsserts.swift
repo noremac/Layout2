@@ -9,44 +9,35 @@ import UIKit
 import XCTest
 
 @MainActor
-private struct EquatableConstraintWrapper {
-  let constraint: NSLayoutConstraint
-
-  static func equal(_ lhs: Self, _ rhs: Self) -> Bool {
-    let lc = lhs.constraint
-    let rc = rhs.constraint
-    return lc.firstItem === rc.firstItem
-      && lc.firstAttribute == rc.firstAttribute
-      && lc.relation == rc.relation
-      && lc.secondItem === rc.secondItem
-      && lc.secondAttribute == rc.secondAttribute
-      && lc.constant == rc.constant
-      && lc.multiplier == rc.multiplier
-      && lc.priority == rc.priority
-      && lc.isActive == rc.isActive
-  }
+private func constraintsEqual(_ lhs: NSLayoutConstraint, _ rhs: NSLayoutConstraint) -> Bool {
+  lhs.firstItem === rhs.firstItem
+    && lhs.firstAttribute == rhs.firstAttribute
+    && lhs.relation == rhs.relation
+    && lhs.secondItem === rhs.secondItem
+    && lhs.secondAttribute == rhs.secondAttribute
+    && lhs.constant == rhs.constant
+    && lhs.multiplier == rhs.multiplier
+    && lhs.priority == rhs.priority
+    && lhs.isActive == rhs.isActive
 }
 
 @MainActor
 func AssertConstraintsEqual(
-  _ c1: some Collection<NSLayoutConstraint>,
-  _ c2: some Collection<NSLayoutConstraint>,
+  _ m1: some Collection<NSLayoutConstraint>,
+  _ m2: some Collection<NSLayoutConstraint>,
   file: StaticString = #file,
   line: UInt = #line
 ) {
   func fail() {
-    XCTFail("(\"\(c1)\") is not equal to (\"\(c2)\")", file: file, line: line)
+    XCTFail("(\"\(m1)\") is not equal to (\"\(m2)\")", file: file, line: line)
   }
-  guard c1.count == c2.count else {
+  guard m1.count == m2.count else {
     return fail()
   }
 
-  let m1 = c1.map(EquatableConstraintWrapper.init(constraint:))
-  let m2 = c2.map(EquatableConstraintWrapper.init(constraint:))
-
   let equal = m1.allSatisfy { c1 in
     for c2 in m2 {
-      if EquatableConstraintWrapper.equal(c2, c2) {
+      if constraintsEqual(c1, c2) {
         return true
       }
     }
@@ -57,8 +48,4 @@ func AssertConstraintsEqual(
   guard equal else {
     return fail()
   }
-//
-//  if !m1.allSatisfy(m2.contains(_:)) {
-//    fail()
-//  }
 }
